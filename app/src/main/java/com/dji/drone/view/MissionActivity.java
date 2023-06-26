@@ -3,6 +3,8 @@ package com.dji.drone.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.dji.drone.R;
 import com.dji.drone.viewModel.Mission;
@@ -28,6 +31,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import dji.common.mission.waypoint.WaypointMission;
+import dji.common.mission.waypoint.WaypointMissionState;
+
 public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener,
         OnMapReadyCallback,
         View.OnClickListener {
@@ -37,6 +43,7 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
     private Button btn_upload;
     private Button btn_start;
     private Button btn_load;
+    private TextView tv_statusMission;
 
     private GoogleMap map;
     private PolygonOptions polygonOptions;
@@ -46,6 +53,7 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
 
     private WaypointPathMaker waypointPathMaker;
     private Mission mission;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +69,19 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         btn_load = findViewById(R.id.btn_load);
         btn_upload = findViewById(R.id.btn_upload);
         btn_start = findViewById(R.id.btn_start);
+        tv_statusMission = findViewById(R.id.tv_statusMission);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
+
+        btn_upload.setOnClickListener(this);
+        btn_load.setOnClickListener(this);
+        btn_start.setOnClickListener(this);
     }
 
     private void initData() {
         polygonOptions = new PolygonOptions()
                 .strokeColor(Color.BLUE)
-                .strokeWidth(1f);
+                .strokeWidth(2f);
 
         markerOptions = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
@@ -76,7 +89,9 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         waypointPathMaker = new WaypointPathMaker(3);
-        mission = new Mission();
+        mission = new ViewModelProvider(this).get(Mission.class);
+        mission._missionState.observe(this, waypointMissionStateObserver);
+
 
     }
 
@@ -98,6 +113,14 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         }
     }
 
+    //------------------------------------------------------------
+    private final Observer<WaypointMissionState> waypointMissionStateObserver = new Observer<WaypointMissionState>() {
+        @Override
+        public void onChanged(WaypointMissionState waypointMissionState) {
+            Log.d(TAG, waypointMissionState.toString());
+            tv_statusMission.setText(waypointMissionState.toString());
+        }
+    };
     //MAP--------------------------------------------------------
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
