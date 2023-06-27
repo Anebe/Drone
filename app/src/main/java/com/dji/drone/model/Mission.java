@@ -87,6 +87,9 @@ public class Mission{
 
     public void uploadMission(){
         WaypointMissionState actualState = waypointMissionOperator.getCurrentState();
+        if(actualState == null){
+            return;
+        }
         if(actualState.equals(WaypointMissionState.READY_TO_UPLOAD) || actualState.equals(WaypointMissionState.READY_TO_RETRY_UPLOAD)){
             waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                 @Override

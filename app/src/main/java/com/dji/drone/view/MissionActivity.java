@@ -23,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -37,11 +38,11 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
     private CheckBox chk_isPossibleAddPolygon;
     private TextView tv_statusMission;
     private Button btn_start;
+    private Button btn_upload;
 
     private GoogleMap map;
     private PolygonOptions polygonOptions;
     private MarkerOptions markerOptions;
-
     private MainViewModel mainViewModel;
 
     @Override
@@ -57,9 +58,11 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         chk_isPossibleAddPolygon = findViewById(R.id.chk_isPossibleAddPolygon);
         tv_statusMission = findViewById(R.id.tv_statusMission);
         btn_start = findViewById(R.id.btn_start);
+        btn_upload = findViewById(R.id.btn_upload);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
         btn_start.setOnClickListener(this);
+        btn_upload.setOnClickListener(this);
     }
 
     private void initData() {
@@ -67,8 +70,7 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
                 .strokeColor(Color.BLUE)
                 .strokeWidth(2f);
 
-        markerOptions = new MarkerOptions()
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        markerOptions = new MarkerOptions();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mainViewModel.getProgressUploadWaypointMission().observe(this, new Observer<String>() {
@@ -77,14 +79,23 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
                 tv_statusMission.setText(s);
             }
         });
+        mainViewModel.getDroneLatLnt().observe(this, new Observer<LatLng>() {
+            @Override
+            public void onChanged(LatLng latLng) {
+                markerOptions.position(latLng);
+            }
+        });
     }
 
     //UI
     @Override
     public void onClick(View v) {
         int actualComponent = v.getId();
+        if(actualComponent == R.id.btn_upload){
+            mainViewModel.uploadMission(polygonOptions.getPoints());
+        }
         if(actualComponent == R.id.btn_start){
-            mainViewModel.startMission(polygonOptions.getPoints());
+            mainViewModel.startMission();
         }
     }
 
@@ -119,6 +130,10 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
     private void updateMap(){
         map.clear();
         map.addPolygon(polygonOptions);
+        if(markerOptions.getPosition() != null){
+            map.addMarker(markerOptions);
+        }
+
     }
 
     private void updateLocationUI()     {
