@@ -27,8 +27,7 @@ import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 import dji.thirdparty.afinal.core.AsyncTask;
 
-public class MainActivity extends AppCompatActivity implements DJISDKManager.SDKManagerCallback,
-                                                            View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements DJISDKManager.SDKManagerCallback{
     private final String TAG = getClass().getName();
 
     private List<String> missingPermission = new ArrayList<>();
@@ -56,19 +55,8 @@ public class MainActivity extends AppCompatActivity implements DJISDKManager.SDK
 
         checkAndRequestPermissions();
 
-        findViewById(R.id.btn_register).setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_register:
-                startSDKRegistration();
-                break;
-            default:
-                break;
-        }
-    }
     //PERMISSION-------------------------------------------------
     public void checkAndRequestPermissions() {
         for (String eachPermission : REQUIRED_PERMISSION_LIST) {
@@ -80,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements DJISDKManager.SDK
             ActivityCompat.requestPermissions(this,
                     missingPermission.toArray(new String[missingPermission.size()]),
                     REQUEST_PERMISSION_CODE);
+        }else{
+            startSDKRegistration();
         }
     }
     @Override
@@ -97,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements DJISDKManager.SDK
         String msg;
         if(missingPermission.isEmpty()){
             msg = "All permissions granted";
+            startSDKRegistration();
         }else{
             msg = "Some permissions not granted: ";
 

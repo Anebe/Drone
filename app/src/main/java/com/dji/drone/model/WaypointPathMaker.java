@@ -1,4 +1,4 @@
-package com.dji.drone.viewModel;
+package com.dji.drone.model;
 
 import android.util.Log;
 

@@ -1,4 +1,4 @@
-package com.dji.drone.viewModel;
+package com.dji.drone.model;
 
 import android.util.Log;
 
@@ -28,64 +28,61 @@ import dji.sdk.mission.waypoint.WaypointMissionOperator;
 import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.sdkmanager.DJISDKManager;
 
-public class Mission  extends ViewModel implements WaypointMissionOperatorListener {
+public class Mission{
     private final String TAG = getClass().getName();
 
-
-    public MutableLiveData<WaypointMissionState> _missionState = new MutableLiveData<>();
     private MissionControl missionControl;
     private WaypointMissionOperator waypointMissionOperator;
     private WaypointMission.Builder waypointMissionBuilder;
 
     private float speed = 10f;
-    private float maxSpeed = 3f;
-    private WaypointMissionGotoWaypointMode gotoWaypointMode = WaypointMissionGotoWaypointMode.SAFELY;
-    private WaypointMissionFinishedAction finishedAction = WaypointMissionFinishedAction.AUTO_LAND;
-    private WaypointMissionHeadingMode headingMode = WaypointMissionHeadingMode.AUTO;
-    private WaypointMissionFlightPathMode flightPathMode = WaypointMissionFlightPathMode.NORMAL;
-
+    private float maxSpeed = 13f;
 
     public Mission() {
         if (DJISDKManager.getInstance().getMissionControl() != null){
             missionControl = DJISDKManager.getInstance().getMissionControl();
             waypointMissionOperator = missionControl.getWaypointMissionOperator();
-            waypointMissionOperator.addListener(this);
             waypointMissionBuilder = new WaypointMission.Builder();
-
-            Log.d(TAG, waypointMissionOperator.getCurrentState().toString());
         }
     }
 
+    public WaypointMissionState getACurrentState(){
+        return waypointMissionOperator.getCurrentState();
+    }
 
-    public void prepareMission(List<Waypoint> waypointList){
+    public void addEventsListener(WaypointMissionOperatorListener waypointMissionOperatorListener){
+        waypointMissionOperator.addListener(waypointMissionOperatorListener);
+    }
+
+    public DJIError prepareMission(List<Waypoint> waypointList){
         for (Waypoint item : waypointList) {
             waypointMissionBuilder.addWaypoint(item);
         }
+
         waypointMissionBuilder.waypointCount(waypointList.size());
         waypointMissionBuilder.autoFlightSpeed(speed);
         waypointMissionBuilder.maxFlightSpeed(maxSpeed);
         waypointMissionBuilder.setExitMissionOnRCSignalLostEnabled(true);
-        waypointMissionBuilder.gotoFirstWaypointMode(gotoWaypointMode);
-        waypointMissionBuilder.finishedAction(finishedAction);
-        waypointMissionBuilder.headingMode(headingMode);
-        waypointMissionBuilder.flightPathMode(flightPathMode);
+        waypointMissionBuilder.gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
+        waypointMissionBuilder.finishedAction(WaypointMissionFinishedAction.AUTO_LAND);
+        waypointMissionBuilder.headingMode(WaypointMissionHeadingMode.AUTO);
+        waypointMissionBuilder.flightPathMode(WaypointMissionFlightPathMode.NORMAL);
 
         WaypointMission waypointMission = waypointMissionBuilder.build();
 
         DJIError djiError = waypointMission.checkParameters();
-        if(djiError== null){
-            DJIError error = waypointMissionOperator.loadMission(waypointMission);
-            if (error == null) {
+        if(djiError == null){
+            djiError = waypointMissionOperator.loadMission(waypointMission);
+            if (djiError == null) {
                 Log.d(TAG, "LoadWaypoint succeeded");
             } else {
-                Log.d(TAG, "LoadWaypoint failed: " + error.getDescription() + " " + error.getErrorCode());
+                Log.d(TAG, "LoadWaypoint failed: " + djiError.getDescription() + " " + djiError.getErrorCode());
             }
         }else{
             String msg = "Invalid parameters: " + djiError.getDescription() + " " +djiError.getErrorCode();
             Log.d(TAG, msg);
         }
-
-        _missionState.setValue(waypointMissionOperator.getCurrentState());
+        return djiError;
     }
 
     public void uploadMission(){
@@ -102,8 +99,6 @@ public class Mission  extends ViewModel implements WaypointMissionOperatorListen
                 }
             });
         }
-        _missionState.setValue(waypointMissionOperator.getCurrentState());
-
     }
 
     public void startMission(){
@@ -120,29 +115,6 @@ public class Mission  extends ViewModel implements WaypointMissionOperatorListen
                 }
             });
         }
-
-    }
-
-    ////////////////////////////////////////////////////////////////
-    @Override
-    public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
-
-    }
-
-    @Override
-    public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
-    }
-
-    @Override
-    public void onExecutionUpdate(@NonNull WaypointMissionExecutionEvent waypointMissionExecutionEvent) {
-    }
-
-    @Override
-    public void onExecutionStart() {
-    }
-
-    @Override
-    public void onExecutionFinish(@Nullable DJIError djiError) {
 
     }
 }

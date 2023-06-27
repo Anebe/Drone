@@ -7,11 +7,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,9 +17,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.dji.drone.R;
-import com.dji.drone.viewModel.Mission;
-import com.dji.drone.viewModel.WaypointPathMaker;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.dji.drone.viewModel.MainViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -31,29 +26,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-import dji.common.mission.waypoint.WaypointMission;
 import dji.common.mission.waypoint.WaypointMissionState;
 
 public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMapClickListener,
         OnMapReadyCallback,
         View.OnClickListener {
+
     private final String TAG = getClass().getName();
 
     private CheckBox chk_isPossibleAddPolygon;
-    private Button btn_upload;
-    private Button btn_start;
-    private Button btn_load;
     private TextView tv_statusMission;
+    private Button btn_start;
 
     private GoogleMap map;
     private PolygonOptions polygonOptions;
     private MarkerOptions markerOptions;
-    private LocationManager locationManager;
-    private static final int DEFAULT_ZOOM = 15;
 
-    private WaypointPathMaker waypointPathMaker;
-    private Mission mission;
-
+    private MainViewModel mainViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +55,10 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
 
     private void initUI() {
         chk_isPossibleAddPolygon = findViewById(R.id.chk_isPossibleAddPolygon);
-        btn_load = findViewById(R.id.btn_load);
-        btn_upload = findViewById(R.id.btn_upload);
-        btn_start = findViewById(R.id.btn_start);
         tv_statusMission = findViewById(R.id.tv_statusMission);
+        btn_start = findViewById(R.id.btn_start);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
-
-        btn_upload.setOnClickListener(this);
-        btn_load.setOnClickListener(this);
         btn_start.setOnClickListener(this);
     }
 
@@ -86,30 +70,21 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         markerOptions = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        waypointPathMaker = new WaypointPathMaker(3);
-        mission = new ViewModelProvider(this).get(Mission.class);
-        mission._missionState.observe(this, waypointMissionStateObserver);
-
-
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.getProgressUploadWaypointMission().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_statusMission.setText(s);
+            }
+        });
     }
 
     //UI
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_load:
-                mission.prepareMission(waypointPathMaker.makePath(polygonOptions.getPoints(), 1.0, 4.0));
-                break;
-            case R.id.btn_upload:
-                mission.uploadMission();
-                break;
-            case R.id.btn_start:
-                mission.startMission();
-                break;
-            default:
-                break;
+        int actualComponent = v.getId();
+        if(actualComponent == R.id.btn_start){
+            mainViewModel.startMission(polygonOptions.getPoints());
         }
     }
 
@@ -146,25 +121,23 @@ public class MissionActivity extends AppCompatActivity implements GoogleMap.OnMa
         map.addPolygon(polygonOptions);
     }
 
-    private void updateLocationUI() {
+    private void updateLocationUI()     {
         if (map == null) {
             return;
         }
         try {
-            if (isLocationPermissionGranted()) {
+            if (isPermissionLocationGuarantied()) {
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                map.setMyLocationEnabled(false);
-                map.getUiSettings().setMyLocationButtonEnabled(false);
             }
+
         } catch (SecurityException e)  {
             Log.e(TAG, "Exception: " +  e.getMessage());
         }
     }
 
-    private boolean isLocationPermissionGranted() {
+    private boolean isPermissionLocationGuarantied(){
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
     }
 }
