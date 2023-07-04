@@ -9,8 +9,8 @@ import dji.common.mission.waypoint.WaypointActionType;
 
 @Entity(tableName = "waypoint_actions",
         foreignKeys = @ForeignKey(entity = WaypointEntity.class,
-                                    childColumns = "id",
-                                    parentColumns = "waypoint_id",
+                                    childColumns = "waypoint_id",
+                                    parentColumns = "id",
                                     onDelete = ForeignKey.CASCADE))
 public class WaypointActionEntity{
 
@@ -23,6 +23,14 @@ public class WaypointActionEntity{
     public WaypointActionEntity(Integer actionType, Integer actionParam) {
         this.actionType = actionType;
         this.actionParam = actionParam;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getActionType() {
@@ -39,5 +47,13 @@ public class WaypointActionEntity{
 
     public void setActionParam(Integer actionParam) {
         this.actionParam = actionParam;
+    }
+
+    public Integer getWaypoint_id() {
+        return waypoint_id;
+    }
+
+    public void setWaypoint_id(Integer waypoint_id) {
+        this.waypoint_id = waypoint_id;
     }
 }

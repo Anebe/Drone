@@ -62,7 +62,7 @@ public class Mission{
         waypointMissionBuilder.waypointCount(waypointList.size());
         waypointMissionBuilder.autoFlightSpeed(speed);
         waypointMissionBuilder.maxFlightSpeed(maxSpeed);
-        waypointMissionBuilder.setExitMissionOnRCSignalLostEnabled(true);
+        waypointMissionBuilder.setExitMissionOnRCSignalLostEnabled(false);
         waypointMissionBuilder.gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
         waypointMissionBuilder.finishedAction(WaypointMissionFinishedAction.AUTO_LAND);
         waypointMissionBuilder.headingMode(WaypointMissionHeadingMode.AUTO);

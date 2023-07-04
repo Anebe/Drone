@@ -23,6 +23,14 @@ public class WaypointEntity {
         this.altitude = altitude;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Double getLatitude() {
         return latitude;
     }
@@ -45,5 +53,13 @@ public class WaypointEntity {
 
     public void setAltitude(Float altitude) {
         this.altitude = altitude;
+    }
+
+    public Integer getMission_id() {
+        return mission_id;
+    }
+
+    public void setMission_id(Integer mission_id) {
+        this.mission_id = mission_id;
     }
 }

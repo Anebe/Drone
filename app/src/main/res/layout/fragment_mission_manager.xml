@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/editTextName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="150dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal"
+        android:id="@+id/editTextSpeed"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginEnd="250dp"
@@ -43,6 +43,39 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <EditText
+        android:id="@+id/editTextSpacing"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+    <EditText
+        android:id="@+id/editTextFinalAltitude"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+    <EditText
+        android:id="@+id/editTextInitialAltitude"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <TextView
         android:id="@+id/textView3"
@@ -78,7 +111,7 @@
         tools:text="100" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewFrontOverlap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -89,7 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewSideOverlap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -97,7 +130,40 @@
         android:text="Side overlap"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewFrontOverlap" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Initial Altitude"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSideOverlap" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:text="Final Altitude"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:text="Spacing"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView2"
@@ -122,7 +188,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerFinishedAction"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:entries="@array/finished_action"
@@ -137,24 +203,26 @@
         android:id="@+id/sk_front_overlap"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewFrontOverlap"
         app:layout_constraintEnd_toStartOf="@+id/tv_front_overlap_value"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
+        app:layout_constraintStart_toEndOf="@+id/textViewFrontOverlap"
+        app:layout_constraintTop_toTopOf="@+id/textViewFrontOverlap" />
 
     <SeekBar
         android:id="@+id/sk_side_overlap"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewSideOverlap"
         app:layout_constraintEnd_toStartOf="@+id/tv_side_overlap_value"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textViewSideOverlap"
+        app:layout_constraintTop_toTopOf="@+id/textViewSideOverlap"
         app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerGotoMode"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:entries="@array/goto_mode"

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Room;
 
 import com.dji.drone.model.Mission;
 import com.dji.drone.model.MissionDAO;
@@ -14,6 +15,7 @@ import com.dji.drone.model.MissionDatabase;
 import com.dji.drone.model.WaypointActionDAO;
 import com.dji.drone.model.WaypointDAO;
 import com.dji.drone.model.WaypointPathMaker;
+import com.google.android.gms.common.internal.RootTelemetryConfigManager;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import java.util.List;
 
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
-import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
 import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
 import dji.common.mission.waypoint.WaypointMissionState;
@@ -34,10 +35,15 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
     private MutableLiveData<LatLng> droneLatLnt;
     private Mission mission;
     private WaypointPathMaker waypointPathMaker;
+
+    //------------------------------
     private MissionDatabase missionDatabase;
     private MissionDAO missionDAO;
     private WaypointDAO waypointDAO;
     private WaypointActionDAO waypointActionDAO;
+    //-------------------------------
+
+    private MutableLiveData<List<LatLng>>  waypoints;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -45,7 +51,14 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
         progressUploadWaypointMission = new MutableLiveData<>();
         droneLatLnt = new MutableLiveData<>();
         mission.addEventsListener(this);
-        waypointPathMaker = new WaypointPathMaker(2);
+        waypointPathMaker = new WaypointPathMaker(5);
+
+        missionDatabase = Room.databaseBuilder(
+                application.getApplicationContext(),MissionDatabase.class, "mission-control")
+                .build();
+        missionDAO = missionDatabase.getMissionDAO();
+        waypointDAO = missionDatabase.getWaypointDAO();
+        waypointActionDAO = missionDatabase.getWaypointActionDAO();
     }
 
     public LiveData<String> getProgressUploadWaypointMission() {
@@ -56,18 +69,31 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
         return droneLatLnt;
     }
 
+    public LiveData<List<LatLng>> getWaypoints() {
+        return waypoints;
+    }
+
+    public void setWaypoints(List<LatLng> waypoints) {
+        this.waypoints.setValue(waypoints);
+    }
 
     //My Methods--------------------------------------------------
     public void uploadMission(List<LatLng> points) {
-        ArrayList<Waypoint> waypoints = new ArrayList<>();
 
-        /*for (LatLng i : points) {
-            waypoints.add(new Waypoint(i.latitude, i.longitude, 3f));
-        }*/
-        DJIError result =  mission.prepareMission(waypointPathMaker.makePath(points, 2.0, 4.0));
-        progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
+        DJIError result =  mission.prepareMission(waypointPathMaker.makePath(points, 2.0, 17.0));
+        /*
+        ArrayList<Waypoint> waypointArrayList = new ArrayList<>();
+        for (LatLng item : points) {
+            waypointArrayList.add(new Waypoint(item.latitude, item.longitude, 2f));
+        }
+        DJIError result =  mission.prepareMission(waypointArrayList);*/
+
         if(result == null){
+            progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
             mission.uploadMission();
+        }
+        else{
+            progressUploadWaypointMission.setValue("check error: " + result.getDescription() + result.getErrorCode());
         }
     }
 
@@ -88,14 +114,20 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
 
     @Override
     public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
-        /*String msg = "";
-        if(waypointMissionUploadEvent.getCurrentState() != null){
+
+        String msg = "a";
+        /*if(waypointMissionUploadEvent.getCurrentState() != null){
             msg += waypointMissionUploadEvent.getCurrentState().toString();
         }
         if(waypointMissionUploadEvent.getProgress() != null){
-            msg += waypointMissionUploadEvent.getProgress().uploadedWaypointIndex + " de " + waypointMissionUploadEvent.getProgress().totalWaypointCount;
+
+            msg += String.valueOf(waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) +
+                " de " + String.valueOf(waypointMissionUploadEvent.getProgress().totalWaypointCount);
         }
-        progressUploadWaypointMission.setValue(msg);*/
+        progressUploadWaypointMission.setValue(msg);
+        */
+
+        //progressUploadWaypointMission.setValue("A");
     }
 
     @Override

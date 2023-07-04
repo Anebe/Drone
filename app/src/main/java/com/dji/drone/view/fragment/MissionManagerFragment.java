@@ -39,6 +39,7 @@ public class MissionManagerFragment extends Fragment {
     }
 
     private void initListener(){
+        Bundle result = new Bundle();
         skb_sideOverlap.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

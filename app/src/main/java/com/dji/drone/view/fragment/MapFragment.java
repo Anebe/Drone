@@ -49,6 +49,7 @@ public class MapFragment extends Fragment {
         initUI();
         initData();
         initListener();
+        initObserver();
 
         return view;
     }
@@ -95,6 +96,10 @@ public class MapFragment extends Fragment {
         btn_start.setOnClickListener(v -> mainViewModel.startMission());
 
         btn_upload.setOnClickListener(v -> mainViewModel.uploadMission(polygonOptions.getPoints()));
+    }
+
+    private void initObserver(){
+
     }
     private void initMapListener(){
         if(map != null){
