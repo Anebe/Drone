@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.dji.drone.R;
 import com.dji.drone.Util;
@@ -97,13 +96,7 @@ public class MainActivity extends AppCompatActivity implements DJISDKManager.SDK
     //DRONE------------------------------------------------------
     private void startSDKRegistration() {
         Util.showToast( "registering, pls wait...", this);
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                DJISDKManager.getInstance().registerApp(MainActivity.this, MainActivity.this);
-            }
-        });
+        DJISDKManager.getInstance().registerApp(MainActivity.this, MainActivity.this);
     }
     //CALLBACK DJI-SDK-MANAGER-----------------------------------
     @Override

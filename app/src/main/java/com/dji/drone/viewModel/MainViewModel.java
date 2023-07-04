@@ -9,8 +9,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dji.drone.model.Mission;
+import com.dji.drone.model.MissionDAO;
+import com.dji.drone.model.MissionDatabase;
+import com.dji.drone.model.WaypointActionDAO;
+import com.dji.drone.model.WaypointDAO;
 import com.dji.drone.model.WaypointPathMaker;
-import com.dji.drone.view.MissionActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -19,7 +22,6 @@ import java.util.List;
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.mission.waypoint.Waypoint;
-import dji.common.mission.waypoint.WaypointMission;
 import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
 import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
 import dji.common.mission.waypoint.WaypointMissionState;
@@ -32,6 +34,10 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
     private MutableLiveData<LatLng> droneLatLnt;
     private Mission mission;
     private WaypointPathMaker waypointPathMaker;
+    private MissionDatabase missionDatabase;
+    private MissionDAO missionDAO;
+    private WaypointDAO waypointDAO;
+    private WaypointActionDAO waypointActionDAO;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -50,7 +56,28 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
         return droneLatLnt;
     }
 
-    //////////////////////////////////
+
+    //My Methods--------------------------------------------------
+    public void uploadMission(List<LatLng> points) {
+        ArrayList<Waypoint> waypoints = new ArrayList<>();
+
+        /*for (LatLng i : points) {
+            waypoints.add(new Waypoint(i.latitude, i.longitude, 3f));
+        }*/
+        DJIError result =  mission.prepareMission(waypointPathMaker.makePath(points, 2.0, 4.0));
+        progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
+        if(result == null){
+            mission.uploadMission();
+        }
+    }
+
+    public void startMission(){
+        progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
+        if ((mission.getACurrentState().equals(WaypointMissionState.READY_TO_EXECUTE))){
+            mission.startMission();
+        }
+    }
+    //WaypointMissionOperatorListener-------------------------------
     @Override
     public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
         /*Integer porcUpload = waypointMissionDownloadEvent.getProgress().totalWaypointCount/(waypointMissionDownloadEvent.getProgress().downloadedWaypointIndex*100);
@@ -96,27 +123,7 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
 
         progressUploadWaypointMission.setValue(msg);
     }
-    ////////////////////////////////////////////////////////////////
-    public void uploadMission(List<LatLng> points) {
-        ArrayList<Waypoint> waypoints = new ArrayList<>();
-
-        /*for (LatLng i : points) {
-            waypoints.add(new Waypoint(i.latitude, i.longitude, 3f));
-        }*/
-        DJIError result =  mission.prepareMission(waypointPathMaker.makePath(points, 2.0, 4.0));
-        progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
-        if(result == null){
-            mission.uploadMission();
-        }
-    }
-
-    public void startMission(){
-        progressUploadWaypointMission.setValue(mission.getACurrentState().toString());
-        if ((mission.getACurrentState().equals(WaypointMissionState.READY_TO_EXECUTE))){
-            mission.startMission();
-        }
-    }
-    /////////////////////////////////
+    //FlightControllerState--------------------------------------------
     @Override
     public void onUpdate(@NonNull FlightControllerState flightControllerState) {
         LatLng aux = new LatLng(flightControllerState.getAircraftLocation().getLatitude(), flightControllerState.getAircraftLocation().getLongitude());

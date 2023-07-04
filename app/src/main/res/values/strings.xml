@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Drone</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <string-array name="goto_mode">
+        <item>Safely</item>
+        <item>Point to Point</item>
+    </string-array>
+    
+    <string-array name="finished_action">
+        <item>No action</item>
+        <item>Go home</item>
+        <item>Auto land</item>
+        <item>Go first waypoint</item>
+    </string-array>
 </resources>

@@ -6,48 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".view.MissionActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mapFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@android:layout/simple_gallery_item"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-139dp" />
-
-    <CheckBox
-        android:id="@+id/chk_isPossibleAddPolygon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="256dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_navigation_items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_statusMission"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="aaaaaaaaaaaaaaaaaaa"
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btn_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_start"
-        app:layout_constraintStart_toStartOf="parent" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

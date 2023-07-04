@@ -32,6 +32,8 @@ public class WaypointPathMaker{
                 LatLng aux = coordinates.get(j);
                 result.add(new Waypoint(aux.latitude,aux.longitude, actual_height));
             }
+            LatLng aux  =coordinates.get(coordinates.size()-1);
+            result.add(new Waypoint(aux.latitude,aux.longitude, actual_height));
             actual_height = Float.sum(actual_height, height_increment);
         }
         /*for (int i = 0; i < coordinates.size(); i++) {

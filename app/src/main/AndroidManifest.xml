@@ -25,15 +25,6 @@
         android:name="android.hardware.usb.accessory"
         android:required="true" />
 
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.ACTION_REQUEST_LOCATION" />
-        </intent>
-        <intent>
-            <action android:name="android.settings.LOCATION_SOURCE_SETTINGS" />
-        </intent>
-    </queries>
-
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -45,13 +36,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Drone"
         tools:targetApi="31">
-
-        <uses-library android:name="com.android.future.usb.accessory" />
-
-        <service
-            android:name="dji.sdk.sdkmanager.DJIGlobalService"
-            tools:ignore="Instantiatable"></service>
-
         <activity
             android:name=".view.MissionActivity"
             android:exported="false">
@@ -59,6 +43,22 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="com.dji.sdk.API_KEY"
+            android:value="${DJI_API_KEY}" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <uses-library android:name="com.android.future.usb.accessory" />
+
+        <service
+            android:name="dji.sdk.sdkmanager.DJIGlobalService"
+            tools:ignore="Instantiatable" />
 
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
@@ -72,7 +72,6 @@
                 android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
                 android:resource="@xml/accessory_filter" />
         </activity>
-
         <activity
             android:name=".view.MainActivity"
             android:exported="true">
@@ -86,18 +85,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <meta-data
-            android:name="com.dji.sdk.API_KEY"
-            android:value="${DJI_API_KEY}" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
