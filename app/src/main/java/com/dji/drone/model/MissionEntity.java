@@ -1,6 +1,7 @@
 package com.dji.drone.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
@@ -10,21 +11,25 @@ import dji.common.mission.waypoint.Waypoint;
 @Entity(tableName = "missions")
 public class MissionEntity {
     @PrimaryKey(autoGenerate = true)
-    private Integer id;
+    private int id;
 
     private String name;
-    private Double auto_flight_speed;
-    private Double max_flight_speed;
-    private Integer goto_mode;
-    private Integer finished_action;
-    private Integer heading_mode;
-    private Integer flightPath_mode;
+    private double auto_flight_speed;
+    private double max_flight_speed;
+    private int goto_mode;
+    private int finished_action;
+    private int heading_mode;
+    private int flightPath_mode;
 
-    public Integer getId() {
+    @Ignore
+    private List<WaypointEntity> waypoints;
+    
+    
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -36,51 +41,59 @@ public class MissionEntity {
         this.name = name;
     }
 
-    public Double getAuto_flight_speed() {
+    public double getAuto_flight_speed() {
         return auto_flight_speed;
     }
 
-    public void setAuto_flight_speed(Double auto_flight_speed) {
+    public void setAuto_flight_speed(double auto_flight_speed) {
         this.auto_flight_speed = auto_flight_speed;
     }
 
-    public Double getMax_flight_speed() {
+    public double getMax_flight_speed() {
         return max_flight_speed;
     }
 
-    public void setMax_flight_speed(Double max_flight_speed) {
+    public void setMax_flight_speed(double max_flight_speed) {
         this.max_flight_speed = max_flight_speed;
     }
 
-    public Integer getGoto_mode() {
+    public int getGoto_mode() {
         return goto_mode;
     }
 
-    public void setGoto_mode(Integer goto_mode) {
+    public void setGoto_mode(int goto_mode) {
         this.goto_mode = goto_mode;
     }
 
-    public Integer getFinished_action() {
+    public int getFinished_action() {
         return finished_action;
     }
 
-    public void setFinished_action(Integer finished_action) {
+    public void setFinished_action(int finished_action) {
         this.finished_action = finished_action;
     }
 
-    public Integer getHeading_mode() {
+    public int getHeading_mode() {
         return heading_mode;
     }
 
-    public void setHeading_mode(Integer heading_mode) {
+    public void setHeading_mode(int heading_mode) {
         this.heading_mode = heading_mode;
     }
 
-    public Integer getFlightPath_mode() {
+    public int getFlightPath_mode() {
         return flightPath_mode;
     }
 
-    public void setFlightPath_mode(Integer flightPath_mode) {
+    public void setFlightPath_mode(int flightPath_mode) {
         this.flightPath_mode = flightPath_mode;
+    }
+
+    public List<WaypointEntity> getWaypoints() {
+        return waypoints;
+    }
+
+    public void setWaypoints(List<WaypointEntity> waypoints) {
+        this.waypoints = waypoints;
     }
 }

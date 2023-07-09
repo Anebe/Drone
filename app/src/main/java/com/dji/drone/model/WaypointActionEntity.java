@@ -2,6 +2,7 @@ package com.dji.drone.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import dji.common.mission.waypoint.WaypointAction;
@@ -11,49 +12,50 @@ import dji.common.mission.waypoint.WaypointActionType;
         foreignKeys = @ForeignKey(entity = WaypointEntity.class,
                                     childColumns = "waypoint_id",
                                     parentColumns = "id",
-                                    onDelete = ForeignKey.CASCADE))
+                                    onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE),
+        indices = @Index(name = "waypoint_id", value = "waypoint_id", unique = true))
 public class WaypointActionEntity{
 
     @PrimaryKey(autoGenerate = true)
-    private Integer id;
-    private Integer actionType;
-    private Integer actionParam;
-    private Integer waypoint_id;
+    private int id;
+    private int actionType;
+    private int actionParam;
+    private int waypoint_id;
 
-    public WaypointActionEntity(Integer actionType, Integer actionParam) {
+    public WaypointActionEntity(int actionType, int actionParam) {
         this.actionType = actionType;
         this.actionParam = actionParam;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getActionType() {
+    public int getActionType() {
         return actionType;
     }
 
-    public void setActionType(Integer actionType) {
+    public void setActionType(int actionType) {
         this.actionType = actionType;
     }
 
-    public Integer getActionParam() {
+    public int getActionParam() {
         return actionParam;
     }
 
-    public void setActionParam(Integer actionParam) {
+    public void setActionParam(int actionParam) {
         this.actionParam = actionParam;
     }
 
-    public Integer getWaypoint_id() {
+    public int getWaypoint_id() {
         return waypoint_id;
     }
 
-    public void setWaypoint_id(Integer waypoint_id) {
+    public void setWaypoint_id(int waypoint_id) {
         this.waypoint_id = waypoint_id;
     }
 }

@@ -22,4 +22,7 @@ public interface WaypointDAO {
 
     @Query("SELECT * from waypoints WHERE mission_id=:mission_id")
     List<WaypointEntity> getWaypoints(int mission_id);
+
+    //@Query("SELECT DISTINCT latitude, longitude from waypoints WHERE mission_id=:mission_id")
+    //List<WaypointEntity> get2dPoints(int mission_id);
 }

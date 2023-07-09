@@ -21,7 +21,7 @@ public interface MissionDAO {
     @Update
     void update(MissionEntity mission);
 
-    @Query("SELECT * from missions where id=:mission_id")
+    @Query("SELECT * from missions where id = :mission_id")
     MissionEntity getMission(int mission_id);
 
     @Query("SELECT * from missions")

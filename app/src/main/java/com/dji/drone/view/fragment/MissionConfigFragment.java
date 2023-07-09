@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 import com.dji.drone.R;
 
-import dji.thirdparty.afinal.core.AsyncTask;
-
-public class MissionManagerFragment extends Fragment {
+public class MissionConfigFragment extends Fragment {
 
     private SeekBar skb_frontOverlap;
     private SeekBar skb_sideOverlap;
@@ -26,7 +24,7 @@ public class MissionManagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_mission_manager, container, false);
+        view = inflater.inflate(R.layout.fragment_mission_config, container, false);
 
         skb_frontOverlap = view.findViewById(R.id.sk_front_overlap);
         skb_sideOverlap = view.findViewById(R.id.sk_side_overlap);

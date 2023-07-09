@@ -2,48 +2,56 @@ package com.dji.drone.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import java.util.List;
 
 @Entity(tableName = "waypoints",
         foreignKeys = @ForeignKey(entity = MissionEntity.class,
                                     parentColumns = "id",
                                     childColumns = "mission_id",
-                                    onDelete = ForeignKey.CASCADE))
+                                    onDelete = ForeignKey.CASCADE),
+        indices = @Index(name = "mission_id", unique = true, value = "mission_id"))
 public class WaypointEntity {
     @PrimaryKey(autoGenerate = true)
-    private Integer id;
-    private Double latitude;
-    private Double longitude;
+    private int id;
+    private double latitude;
+    private double longitude;
     private Float altitude;
-    private Integer mission_id;
+    private int mission_id;
 
-    public WaypointEntity(Double latitude, Double longitude, Float altitude) {
+    @Ignore
+    private List<WaypointActionEntity> actions;
+
+    public WaypointEntity(double latitude, double longitude, Float altitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
@@ -55,11 +63,19 @@ public class WaypointEntity {
         this.altitude = altitude;
     }
 
-    public Integer getMission_id() {
+    public int getMission_id() {
         return mission_id;
     }
 
-    public void setMission_id(Integer mission_id) {
+    public void setMission_id(int mission_id) {
         this.mission_id = mission_id;
+    }
+
+    public List<WaypointActionEntity> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<WaypointActionEntity> actions) {
+        this.actions = actions;
     }
 }

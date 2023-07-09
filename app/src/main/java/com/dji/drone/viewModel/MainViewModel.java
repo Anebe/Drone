@@ -50,7 +50,6 @@ public class MainViewModel extends AndroidViewModel implements WaypointMissionOp
         mission = new Mission();
         progressUploadWaypointMission = new MutableLiveData<>();
         droneLatLnt = new MutableLiveData<>();
-        mission.addEventsListener(this);
         waypointPathMaker = new WaypointPathMaker(5);
 
         missionDatabase = Room.databaseBuilder(

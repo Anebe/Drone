@@ -50,10 +50,6 @@ public class Mission{
         return waypointMissionOperator.getCurrentState();
     }
 
-    public void addEventsListener(WaypointMissionOperatorListener waypointMissionOperatorListener){
-        waypointMissionOperator.addListener(waypointMissionOperatorListener);
-    }
-
     public DJIError prepareMission(List<Waypoint> waypointList){
         for (Waypoint item : waypointList) {
             waypointMissionBuilder.addWaypoint(item);

@@ -5,13 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.dji.drone.R;
 import com.dji.drone.view.fragment.MapFragment;
-import com.dji.drone.view.fragment.MissionManagerFragment;
+import com.dji.drone.view.fragment.MissionConfigFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -20,7 +19,7 @@ public class MissionActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
     private FragmentManager fragmentManager;
     private Fragment mapFragment;
-    private Fragment missionManagerFragment;
+    private Fragment missionConfigFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class MissionActivity extends AppCompatActivity {
     }
     private void initData(){
         mapFragment = new MapFragment();
-        missionManagerFragment = new MissionManagerFragment();
+        missionConfigFragment = new MissionConfigFragment();
         fragmentManager = getSupportFragmentManager();
     }
     private void initListener(){
@@ -50,7 +49,7 @@ public class MissionActivity extends AppCompatActivity {
                     replaceFragment(mapFragment);
                 }
                 if(item.getItemId() == R.id.missionItem){
-                    replaceFragment(missionManagerFragment);
+                    replaceFragment(missionConfigFragment);
                 }
                 return true;
             }
