@@ -16,8 +16,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!-- -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <!-- -->
+
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="false" />
@@ -36,13 +40,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Drone"
         tools:targetApi="31">
-        <activity
-            android:name=".view.MissionActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -73,7 +70,7 @@
                 android:resource="@xml/accessory_filter" />
         </activity>
         <activity
-            android:name=".view.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

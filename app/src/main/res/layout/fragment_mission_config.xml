@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.MissionConfigFragment">
+    tools:context=".view.MissionConfigFragment"
+    tools:viewBindingIgnore="true" >
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,13 +19,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:gravity="left"
+            android:orientation="vertical">
+
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:text="Name"
                 android:textSize="18sp" />
 
@@ -31,32 +32,14 @@
                 android:id="@+id/editTextName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="150dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:autofillHints="" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="26dp"
-                android:text="Finished Action"
-                android:textSize="18sp" />
-
-            <Spinner
-                android:id="@+id/spinnerFinishedAction"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:entries="@array/finished_action"
-                android:textAlignment="textEnd" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="26dp"
                 android:text="Speed"
                 android:textSize="18sp" />
 
@@ -64,63 +47,58 @@
                 android:id="@+id/editTextSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="250dp"
-                android:ems="10"
+                android:ems="4"
                 android:inputType="numberDecimal"
-                android:textSize="16sp" />
+                android:minHeight="48dp"
+                android:textSize="16sp"
+                android:autofillHints="" />
 
             <TextView
-                android:id="@+id/textViewFrontOverlap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Front overlap"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <SeekBar
-                    android:id="@+id/sk_front_overlap"
-                    android:layout_width="270dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tv_front_overlap_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    tools:text="100%" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="36dp"
                 android:text="Spacing"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextSpacing"
-                android:layout_width="96dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:inputType="numberSigned"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lines"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextNumberSignedLines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:ems="3"
+                android:inputType="number"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Initial Altitude"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editTextInitialAltitude"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:ems="10"
+                android:ems="5"
                 android:inputType="numberDecimal"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="36dp"
                 android:text="Final Altitude"
                 android:textSize="18sp" />
 
@@ -128,66 +106,55 @@
                 android:id="@+id/editTextFinalAltitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:ems="5"
                 android:inputType="numberDecimal"
+                android:minHeight="48dp"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:text="Initial Altitude"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/editTextInitialAltitude"
-                android:layout_width="96dp"
-                android:layout_height="48dp"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="27dp"
-                android:text="Go to Mode"
-                android:textSize="18sp" />
-
-            <Spinner
-                android:id="@+id/spinnerGotoMode"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:entries="@array/goto_mode"
-                android:textAlignment="textEnd" />
-
-            <TextView
-                android:id="@+id/textViewSideOverlap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Side overlap"
+                android:text="Beginning of the path"
                 android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <SeekBar
-                    android:id="@+id/sk_side_overlap"
+                    android:id="@+id/sk_beginning_path"
                     android:layout_width="270dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tv_side_overlap_value"
+                    android:id="@+id/tv_beginning_path_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:text="100%" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Path size"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/sk_path_size"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_path_size_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -195,13 +162,107 @@
                     tools:text="100%" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finished Action"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinnerFinishedAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/finished_action"
+                android:minHeight="48dp"
+                android:textAlignment="textEnd" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Goto Mode"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinnerGotoMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/goto_mode"
+                android:minHeight="48dp"
+                android:textAlignment="textEnd" />
+
             <CheckBox
                 android:id="@+id/checkBoxIncludeRoof"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="36dp"
-                android:text="Include roof" />
+                android:text="Include roof"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Side overlap"
+                android:textSize="18sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <SeekBar
+                    android:id="@+id/sk_side_overlap"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_side_overlap_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    tools:text="100%"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Front overlap"
+                android:textSize="18sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <SeekBar
+                    android:id="@+id/sk_front_overlap"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_front_overlap_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    tools:text="100%"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

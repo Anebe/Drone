@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mission_navigation"
+    app:startDestination="@id/mapFragment">
+    <argument
+        android:name="mission_id"
+        app:argType="integer"
+        android:defaultValue="-1" />
+
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.dji.drone.view.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="mission_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/missionConfigFragment"
+        android:name="com.dji.drone.view.MissionConfigFragment"
+        android:label="fragment_mission_config"
+        tools:layout="@layout/fragment_mission_config" >
+        <argument
+            android:name="mission_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <action
+        android:id="@+id/goto_map"
+        app:destination="@id/mapFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mission_navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/goto_config"
+        app:destination="@id/missionConfigFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mission_navigation"
+        app:popUpToInclusive="true" />
+    <fragment
+        android:id="@+id/startMissionFragment"
+        android:name="com.dji.drone.view.StartMissionFragment"
+        android:label="fragment_start_mission"
+        tools:layout="@layout/fragment_start_mission" />
+    <fragment
+        android:id="@+id/resultMissionFragment"
+        android:name="com.dji.drone.view.ResultMissionFragment"
+        android:label="fragment_result_mission"
+        tools:layout="@layout/fragment_result_mission" />
+    <action
+        android:id="@+id/goto_start"
+        app:destination="@id/startMissionFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/mission_navigation"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_resultMissionFragment"
+        app:destination="@id/resultMissionFragment"
+        app:popUpTo="@id/mission_navigation"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true" />
+</navigation>

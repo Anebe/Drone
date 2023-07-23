@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.StartMissionFragment"
+    tools:viewBindingIgnore="true" >
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="State" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_state_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="NOT_SUPPORTED" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number of waypoints " />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_number_waypoints_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="34" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number of photos" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_number_photos_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="145" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total distance " />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_total_distance_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="536M" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total time" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_total_time_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="15min, 30s" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Parameters status" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" : " />
+
+            <TextView
+                android:id="@+id/tv_parameter_status_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="erro" />
+        </TableRow>
+
+    </TableLayout>
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_play_circle_24" />
+
+    <TextureView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

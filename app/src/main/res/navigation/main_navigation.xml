@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/missionFragment"
+        android:name="com.dji.drone.view.MissionFragment"
+        android:label="fragment_mission"
+        tools:layout="@layout/fragment_mission" >
+        <argument
+            android:name="missionId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.dji.drone.view.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/menu_to_mission"
+            app:destination="@id/missionFragment" />
+        <action
+            android:id="@+id/menu_to_teste"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.dji.drone.view.CameraFragment"
+        android:label="CameraFragment" />
+</navigation>

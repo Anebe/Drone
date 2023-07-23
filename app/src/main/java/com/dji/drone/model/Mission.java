@@ -2,45 +2,33 @@ package com.dji.drone.model;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import dji.common.error.DJIError;
 import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointMission;
-import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
-import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
 import dji.common.mission.waypoint.WaypointMissionFinishedAction;
 import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
 import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionState;
-import dji.common.mission.waypoint.WaypointMissionUploadEvent;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.mission.MissionControl;
 import dji.sdk.mission.waypoint.WaypointMissionOperator;
-import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class Mission{
     private final String TAG = getClass().getName();
 
-    private MissionControl missionControl;
     private WaypointMissionOperator waypointMissionOperator;
     private WaypointMission.Builder waypointMissionBuilder;
 
-    private float speed = 10f;
-    private float maxSpeed = 13f;
+    private final float speed = 10f;
+    private final float maxSpeed = 13f;
 
     public Mission() {
         if (DJISDKManager.getInstance().getMissionControl() != null){
-            missionControl = DJISDKManager.getInstance().getMissionControl();
+            MissionControl missionControl = DJISDKManager.getInstance().getMissionControl();
             waypointMissionOperator = missionControl.getWaypointMissionOperator();
             waypointMissionBuilder = new WaypointMission.Builder();
         }
@@ -83,9 +71,6 @@ public class Mission{
 
     public void uploadMission(){
         WaypointMissionState actualState = waypointMissionOperator.getCurrentState();
-        if(actualState == null){
-            return;
-        }
         if(actualState.equals(WaypointMissionState.READY_TO_UPLOAD) || actualState.equals(WaypointMissionState.READY_TO_RETRY_UPLOAD)){
             waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                 @Override
