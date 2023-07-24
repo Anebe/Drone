@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.StartMissionFragment"
-    tools:viewBindingIgnore="true" >
+    tools:context=".view.StartMissionFragment">
 
     <TableLayout
         android:layout_width="wrap_content"
@@ -19,12 +18,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="State" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/state" />
 
             <TextView
                 android:id="@+id/tv_state_value"
@@ -40,12 +34,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Number of waypoints " />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/number_of_waypoints" />
 
             <TextView
                 android:id="@+id/tv_number_waypoints_value"
@@ -61,12 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Number of photos" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/number_of_photos" />
 
             <TextView
                 android:id="@+id/tv_number_photos_value"
@@ -82,12 +66,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total distance " />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/total_distance" />
 
             <TextView
                 android:id="@+id/tv_total_distance_value"
@@ -103,12 +82,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total time" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/total_time" />
 
             <TextView
                 android:id="@+id/tv_total_time_value"
@@ -124,12 +98,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Parameters status" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" : " />
+                android:text="@string/parameters_status" />
 
             <TextView
                 android:id="@+id/tv_parameter_status_value"
@@ -143,6 +112,8 @@
     <ImageButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/start_mission"
+        android:minHeight="48dp"
         android:src="@drawable/ic_round_play_circle_24" />
 
     <TextureView

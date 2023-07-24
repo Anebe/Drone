@@ -7,12 +7,10 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -21,8 +19,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dji.drone.R;
+import com.dji.drone.databinding.FragmentMapBinding;
 import com.dji.drone.viewModel.MissionViewModel;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -32,21 +32,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import dji.sdk.mission.timeline.actions.internal.LandOrGoHomeActionBase;
 
 public class MapFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
 
-    private ImageButton btn_create;
-    private ImageButton btn_delete;
-    private SwitchCompat swh_marker_control;
+    private FragmentMapBinding binding;
 
     private GoogleMap map;
     private Polygon polygon;
@@ -59,7 +53,10 @@ public class MapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_map, container, false);
+        binding = FragmentMapBinding.inflate(inflater, container, false);
+
+        view = binding.getRoot();
+
 
         initUI();
         initData();
@@ -69,6 +66,11 @@ public class MapFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
     @Override
     public void onPause() {
@@ -81,10 +83,6 @@ public class MapFragment extends Fragment {
     }
 
     private void initUI() {
-        btn_create = view.findViewById(R.id.imageButtonCreate);
-        btn_delete = view.findViewById(R.id.imageButtonDelete);
-        swh_marker_control = view.findViewById(R.id.switchMarkerControl);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if(mapFragment != null){
             mapFragment.getMapAsync(googleMap ->{
@@ -105,7 +103,7 @@ public class MapFragment extends Fragment {
     }
 
     private void initListener(){
-        btn_create.setOnClickListener(v -> {
+        binding.imageButtonCreate.setOnClickListener(v -> {
             if(map != null){
                 PolygonOptions polygonOptions = getInstancePolygonOptions();
 
@@ -124,10 +122,8 @@ public class MapFragment extends Fragment {
                 createUpdateMarker(3);
                 switchButtons();
             }
-
         });
-
-        btn_delete.setOnClickListener(v -> {
+        binding.imageButtonDelete.setOnClickListener(v -> {
             if(map != null){
                 map.clear();
                 addMarkers.clear();
@@ -136,13 +132,14 @@ public class MapFragment extends Fragment {
                 switchButtons();
             }
         });
+        
 
-        swh_marker_control.setOnClickListener(v -> {
+        binding.switchMarkerControl.setOnClickListener(v -> {
             updateMarkerVisible();
-            if(swh_marker_control.isChecked()){
-                swh_marker_control.setThumbResource(R.drawable.ic_round_add_circle_24);
+            if(binding.switchMarkerControl.isChecked()){
+                binding.switchMarkerControl.setThumbResource(R.drawable.ic_round_add_circle_24);
             }else{
-                swh_marker_control.setThumbResource(R.drawable.ic_round_remove_circle_24);
+                binding.switchMarkerControl.setThumbResource(R.drawable.ic_round_remove_circle_24);
             }
 
         });
@@ -173,42 +170,8 @@ public class MapFragment extends Fragment {
                 createUpdateMarker(latLngs.size()-1);
             }
         }
-
-        //TESTE(map.addMarker(new MarkerOptions().position(moveMarkers.get(0).getPosition())
-        //        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))),
-        //        map.addMarker(new MarkerOptions().position(moveMarkers.get(0).getPosition())),
-        //        map.addPolyline(new PolylineOptions().add(moveMarkers.get(0).getPosition())
-        //                .color(Color.RED)));
     }
-//-------------------------------------------------------
-    private void TESTE(Marker m1, Marker m2, Polyline polyline){
-        SeekBar s = view.findViewById(R.id.seekBarTeste);
-        SeekBar s2 = view.findViewById(R.id.seekBarTeste2);
-
-        SeekBar.OnSeekBarChangeListener listener = new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                List<LatLng> latLngList = missionViewModel.TESTE(polygon.getPoints(), s.getProgress(), s2.getProgress());
-                polyline.setPoints(latLngList);
-                m1.setPosition(latLngList.get(0));
-                m2.setPosition(latLngList.get(latLngList.size()-1));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        };
-
-        s.setOnSeekBarChangeListener(listener);
-        s2.setOnSeekBarChangeListener(listener);
-    }
-
+    //-------------------------------------------------------
     private LatLng positionMarkerOnPolygon(List<LatLng> polygonPoints, double percentage) {
         int numPoints = polygonPoints.size();
         if (numPoints < 2) {
@@ -258,10 +221,9 @@ public class MapFragment extends Fragment {
         double lng = point1.longitude + (point2.longitude - point1.longitude) * fraction;
         return new LatLng(lat, lng);
     }
+    //-------------------------------------------------------
 
-//-------------------------------------------------------
-
-    @SuppressLint("PotentialBehaviorOverride")
+    @SuppressLint("PotentialBehaviorOverride")//Not using clustering, GeoJson, or KML
     private void initMapListener(){
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -280,7 +242,7 @@ public class MapFragment extends Fragment {
         });
 
         map.setOnMarkerClickListener(marker -> {
-            if(addMarkers.contains(marker) && swh_marker_control.isChecked()){
+            if(addMarkers.contains(marker) && binding.switchMarkerControl.isChecked()){
                 int nextIndex = addMarkers.indexOf(marker) + 1;
                 List<LatLng> aux = polygon.getPoints();
                 aux.add(nextIndex, marker.getPosition());
@@ -289,7 +251,7 @@ public class MapFragment extends Fragment {
                 createUpdateMarker(1);
                 return true;
             }
-            else if(removeMarkers.contains(marker) && !swh_marker_control.isChecked() && removeMarkers.size() > 3){
+            else if(removeMarkers.contains(marker) && !binding.switchMarkerControl.isChecked() && removeMarkers.size() > 3){
                 int actualIndex = removeMarkers.indexOf(marker);
 
                 removeMarkers.remove(actualIndex).remove();
@@ -310,19 +272,18 @@ public class MapFragment extends Fragment {
         
     }
     //--------------------------------------------------------
-
     private void switchButtons(){
-        if(btn_delete.isEnabled()){
-            btn_delete.setEnabled(false);
-            btn_delete.setAlpha(0.4f);
-            btn_create.setEnabled(true);
-            btn_create.setAlpha(1f);
+        if(binding.imageButtonDelete.isEnabled()){
+            binding.imageButtonDelete.setEnabled(false);
+            binding.imageButtonDelete.setAlpha(0.4f);
+            binding.imageButtonCreate.setEnabled(true);
+            binding.imageButtonCreate.setAlpha(1f);
         }
-        else if(btn_create.isEnabled()){
-            btn_create.setEnabled(false);
-            btn_create.setAlpha(0.4f);
-            btn_delete.setEnabled(true);
-            btn_delete.setAlpha(1f);
+        else if(binding.imageButtonCreate.isEnabled()){
+            binding.imageButtonCreate.setEnabled(false);
+            binding.imageButtonCreate.setAlpha(0.4f);
+            binding.imageButtonDelete.setEnabled(true);
+            binding.imageButtonDelete.setAlpha(1f);
         }
 
     }
@@ -351,7 +312,7 @@ public class MapFragment extends Fragment {
     }
 
     private void updateMarkerVisible(){
-        boolean setMoveVisible = swh_marker_control.isChecked();
+        boolean setMoveVisible = binding.switchMarkerControl.isChecked();
 
         for (int i = 0; i < moveMarkers.size(); i++) {
             moveMarkers.get(i).setVisible(setMoveVisible);

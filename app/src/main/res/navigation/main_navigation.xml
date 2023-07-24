@@ -22,12 +22,6 @@
         <action
             android:id="@+id/menu_to_mission"
             app:destination="@id/missionFragment" />
-        <action
-            android:id="@+id/menu_to_teste"
-            app:destination="@id/cameraFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="com.dji.drone.view.CameraFragment"
-        android:label="CameraFragment" />
+
 </navigation>

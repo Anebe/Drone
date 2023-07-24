@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MissionConfigFragment"
-    tools:viewBindingIgnore="true" >
+    tools:context=".view.MissionConfigFragment">
 
     <ScrollView
         android:layout_width="0dp"
@@ -25,88 +24,101 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="@string/name"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints="My Project"
                 android:ems="10"
+                android:hint="@string/my_project_1"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
-                android:autofillHints="" />
+                android:textColorHint="#757575" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speed"
+                android:text="@string/speed"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints="12.5"
                 android:ems="4"
+                android:hint="@string/_7_24"
                 android:inputType="numberDecimal"
                 android:minHeight="48dp"
-                android:textSize="16sp"
-                android:autofillHints="" />
+                android:textColorHint="#757575"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Spacing"
+                android:text="@string/spacing"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextSpacing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:ems="3"
+                android:hint="@string/_3_5"
                 android:inputType="numberSigned"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:textColorHint="#757575" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lines"
+                android:text="@string/lines"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextNumberSignedLines"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints="3"
                 android:digits="0123456789"
                 android:ems="3"
+                android:hint="@string/_5"
                 android:inputType="number"
                 android:minHeight="48dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Initial Altitude"
+                android:text="@string/initial_altitude"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextInitialAltitude"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
+                android:autofillHints=""
                 android:ems="5"
+                android:hint="@string/_10_3"
                 android:inputType="numberDecimal"
                 android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Final Altitude"
+                android:text="@string/final_altitude"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/editTextFinalAltitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints="20.3"
                 android:ems="5"
+                android:hint="@string/_24_0"
                 android:inputType="numberDecimal"
                 android:minHeight="48dp"
                 android:textSize="16sp" />
@@ -114,7 +126,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Beginning of the path"
+                android:text="@string/beginning_of_the_path"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -140,7 +152,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Path size"
+                android:text="@string/path_size"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -165,7 +177,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Finished Action"
+                android:text="@string/finished_action"
                 android:textSize="18sp" />
 
             <Spinner
@@ -179,7 +191,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Goto Mode"
+                android:text="@string/goto_mode"
                 android:textSize="18sp" />
 
             <Spinner
@@ -194,13 +206,13 @@
                 android:id="@+id/checkBoxIncludeRoof"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Include roof"
+                android:text="@string/include_roof"
                 android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Side overlap"
+                android:text="@string/side_overlap"
                 android:textSize="18sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -233,7 +245,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Front overlap"
+                android:text="@string/front_overlap"
                 android:textSize="18sp"
                 android:visibility="gone"
                 tools:visibility="visible" />

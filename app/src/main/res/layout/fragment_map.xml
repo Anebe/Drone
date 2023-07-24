@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MapFragment"
-    tools:viewBindingIgnore="true" >
+    tools:context=".view.MapFragment">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/map"
@@ -44,6 +44,7 @@
             android:id="@+id/imageButtonCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/add_basic_points"
             android:minHeight="48dp"
             android:src="@drawable/ic_baseline_polyline_24" />
 
@@ -51,6 +52,7 @@
             android:id="@+id/imageButtonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/delete_points"
             android:minHeight="48dp"
             android:src="@drawable/ic_baseline_delete_24" />
 
@@ -61,15 +63,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarSize="100dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone" />
 
     <SeekBar
         android:id="@+id/seekBarTeste2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarSize="100dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/seekBarTeste"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
