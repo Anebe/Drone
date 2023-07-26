@@ -71,7 +71,6 @@ public class MenuFragment extends Fragment {
     };
 
     public static class MenuMissionAdapter extends RecyclerView.Adapter<MenuMissionAdapter.ViewHolder> {
-        private final String TAG = getClass().getSimpleName();
         private List<MissionEntity> missionList  = new ArrayList<>();
         private final IRecyclerViewClickItemListener onItemClickListener;
         private RecyclerViewMissionItensBinding binding;
@@ -108,11 +107,10 @@ public class MenuFragment extends Fragment {
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder{
-            private RecyclerViewMissionItensBinding binding;
+            private final RecyclerViewMissionItensBinding binding;
 
             public ViewHolder(@NonNull RecyclerViewMissionItensBinding itemView) {
                 super(itemView.getRoot());
-            
                 this.binding = itemView;
             }
         }

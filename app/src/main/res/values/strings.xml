@@ -43,4 +43,8 @@
     <string name="parameters_status">Parameters status</string>
     <string name="delete_points">Delete Points</string>
     <string name="add_basic_points">Add basic points</string>
+    <string name="latitude">Latitude:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="altitude">Altitude:</string>
+    <string name="image_of_crack_detection">Image of crack detection</string>
 </resources>

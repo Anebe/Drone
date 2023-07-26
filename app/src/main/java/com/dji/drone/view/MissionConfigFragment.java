@@ -1,6 +1,7 @@
 package com.dji.drone.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,8 @@ public class MissionConfigFragment extends Fragment {
             //missionEntity.setSide_overlap(binding.skSideOverlap.getProgress());
             missionEntity.setInitial_path_percentage(binding.skBeginningPath.getProgress());
             missionEntity.setFinal_path_percentage(binding.skPathSize.getProgress());
-            missionViewModel.updateMission();
+            long result = missionViewModel.updateMission();
+            Log.d(TAG, "Update mission in database: " + (result > 0));
         }
     }
 

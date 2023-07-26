@@ -4,35 +4,28 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dji.drone.R;
 import com.dji.drone.databinding.FragmentStartMissionBinding;
 import com.dji.drone.viewModel.MissionViewModel;
 
 public class StartMissionFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
-    //private TextView tv_state;
-    //private TextView tv_number_waypoints;
-    //private TextView tv_number_photos;
-    //private TextView tv_total_distance;
-    //private TextView tv_total_time;
-    //private TextView tv_parameter_status;
     private FragmentStartMissionBinding binding;
     private MissionViewModel missionViewModel;
-    private View view;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentStartMissionBinding.inflate(inflater, container, false);
-        view = binding.getRoot();
+        View view = binding.getRoot();
 
         initData();
+        initListener();
         return view;
     }
 
@@ -68,5 +61,9 @@ public class StartMissionFragment extends Fragment {
         aux = missionViewModel.getParameterStatus();
         binding.tvParameterStatusValue.setText(aux);
 
+    }
+
+    private void initListener(){
+        binding.imgBtnStart.setOnClickListener(v -> missionViewModel.tryStartMission());
     }
 }

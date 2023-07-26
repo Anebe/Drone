@@ -1,19 +1,20 @@
 package com.dji.drone.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,7 +23,6 @@ import com.dji.drone.R;
 import com.dji.drone.databinding.FragmentMapBinding;
 import com.dji.drone.viewModel.MissionViewModel;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -49,13 +49,12 @@ public class MapFragment extends Fragment {
     private List<Marker> moveMarkers;
 
     private MissionViewModel missionViewModel;
-    private View view;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
 
-        view = binding.getRoot();
+        View view = binding.getRoot();
 
 
         initUI();
@@ -76,9 +75,10 @@ public class MapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if(missionViewModel.getActualMission() != null){
-            missionViewModel.updateLatLng((moveMarkers.size() > 0) ?
+            boolean result = missionViewModel.updateLatLng((moveMarkers.size() > 0) ?
                     polygon.getPoints() :
                     new ArrayList<>());
+            Log.d(TAG, "Updade LatLng in database: " + result);
         }
     }
 
@@ -148,6 +148,8 @@ public class MapFragment extends Fragment {
     private void initObserver(){
     }
 
+
+    @SuppressLint("MissingPermission")
     private void initMapData(){
         map.getUiSettings().setTiltGesturesEnabled(false);
         map.getUiSettings().setRotateGesturesEnabled(false);
@@ -169,6 +171,15 @@ public class MapFragment extends Fragment {
                 switchButtons();
                 createUpdateMarker(latLngs.size()-1);
             }
+        }
+
+        //Verify permission, justify @SuppressLint
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+            map.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
     //-------------------------------------------------------
