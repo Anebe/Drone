@@ -13,5 +13,7 @@ public class MainApplication extends Application {
     protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
         Helper.install(MainApplication.this);
+
+
     }
 }

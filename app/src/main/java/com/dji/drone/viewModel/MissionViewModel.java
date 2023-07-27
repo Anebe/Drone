@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.dji.drone.model.MissionRepository;
 import com.dji.drone.model.WaypointPathMaker;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import dji.common.error.DJIError;
+import dji.common.flightcontroller.FlightControllerState;
 import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointAction;
 import dji.common.mission.waypoint.WaypointActionType;
@@ -26,27 +29,40 @@ import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
 import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionState;
+import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.mission.MissionControl;
 import dji.sdk.mission.waypoint.WaypointMissionOperator;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
-public class MissionViewModel extends AndroidViewModel{
+public class MissionViewModel extends AndroidViewModel implements FlightControllerState.Callback {
     private final String TAG = getClass().getSimpleName();
-
-    //private Mission mission;
-    //private WaypointPathMaker waypointPathMaker;
 
     //------------------------------
     private MissionEntity actualMission;
     private final MissionRepository missionRepository;
     //-------------------------------
     private WaypointMission.Builder missionBuilder;
+    private FlightController flightController;
+    //-------------------------------------------
+    private MutableLiveData<Point2D> droneLatLng;
+
 
     public MissionViewModel(@NonNull Application application) {
         super(application);
         //mission = new Mission();
 
         missionRepository = new MissionRepository(application);
+        droneLatLng = new MutableLiveData<>();
+        Aircraft aircraft = (Aircraft)DJISDKManager.getInstance().getProduct();
+        if(aircraft != null){
+            flightController = aircraft.getFlightController();
+            flightController.setStateCallback(this);
+        }
+    }
+
+    public LiveData<Point2D> getDroneLatLng() {
+        return droneLatLng;
     }
 
     public void setActualMission(int missionId) {
@@ -61,11 +77,11 @@ public class MissionViewModel extends AndroidViewModel{
     }
     //My Methods--------------------------------------------------
 
-    public List<LatLng> TESTE(@NonNull List<LatLng> entrada, int start, int size){
+    public List<LatLng> getPath2D(@NonNull List<LatLng> entrada, int start, int size){
         return convertToLatLng(WaypointPathMaker.makeSubCoordinates(convertToPoint2D(entrada), start, size));
     }
 
-    public List<Waypoint> convertToWaypoint(@NonNull List<Point2D> point2DList){
+    private List<Waypoint> convertToWaypoint(@NonNull List<Point2D> point2DList){
         ArrayList<Waypoint> result = new ArrayList<>();
         for (int i = 0; i < point2DList.size(); i++) {
             double latitude = point2DList.get(i).getLatitude();
@@ -75,7 +91,7 @@ public class MissionViewModel extends AndroidViewModel{
         }
         return result;
     }
-    public List<Point2D> convertToPoint2D(@NonNull List<LatLng> latLngList){
+    private List<Point2D> convertToPoint2D(@NonNull List<LatLng> latLngList){
         ArrayList<Point2D> result = new ArrayList<>();
         for (int i = 0; i < latLngList.size(); i++) {
             double latitude = latLngList.get(i).latitude;
@@ -268,5 +284,13 @@ public class MissionViewModel extends AndroidViewModel{
         }else{
             return error.getDescription() + "("+error.getErrorCode() + ")";
         }
+    }
+
+    @Override
+    public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+        Point2D point2D = new Point2D();
+        point2D.setLatitude(flightControllerState.getAircraftLocation().getLatitude());
+        point2D.setLongitude(flightControllerState.getAircraftLocation().getLongitude());
+        droneLatLng.setValue(point2D);
     }
 }

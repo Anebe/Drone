@@ -47,7 +47,7 @@ public class MapFragment extends Fragment {
     private List<Marker> addMarkers;
     private List<Marker> removeMarkers;
     private List<Marker> moveMarkers;
-
+    private Marker droneMarker;
     private MissionViewModel missionViewModel;
 
     @Override
@@ -89,6 +89,7 @@ public class MapFragment extends Fragment {
                 map = googleMap;
                 initMapData();
                 initMapListener();
+                initMapObserver();
             });
         }
         switchButtons();
@@ -146,6 +147,7 @@ public class MapFragment extends Fragment {
     }
 
     private void initObserver(){
+
     }
 
 
@@ -173,6 +175,7 @@ public class MapFragment extends Fragment {
             }
         }
 
+        droneMarker = map.addMarker(getInstanceDroneMarkerOption());
         //Verify permission, justify @SuppressLint
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
@@ -182,57 +185,6 @@ public class MapFragment extends Fragment {
             map.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
-    //-------------------------------------------------------
-    private LatLng positionMarkerOnPolygon(List<LatLng> polygonPoints, double percentage) {
-        int numPoints = polygonPoints.size();
-        if (numPoints < 2) {
-            return null;
-        }
-        double totalDistance = 0.0;
-        double targetDistance = percentage * calculatePolygonDistance(polygonPoints);
-
-        for (int i = 1; i < numPoints; i++) {
-            LatLng prevPoint = polygonPoints.get(i - 1);
-            LatLng currPoint = polygonPoints.get(i);
-            double distance = calculateDistance(prevPoint, currPoint);
-            totalDistance += distance;
-
-            if (totalDistance >= targetDistance) {
-                double fraction = (targetDistance - (totalDistance - distance)) / distance;
-                return interpolateLatLng(prevPoint, currPoint, fraction);
-            }else if(i == numPoints-1){
-                i = 1;
-            }
-        }
-
-        return null;
-    }
-
-    private double calculatePolygonDistance(List<LatLng> polygonPoints) {
-        double totalDistance = 0.0;
-        int numPoints = polygonPoints.size();
-
-        for (int i = 1; i < numPoints; i++) {
-            LatLng prevPoint = polygonPoints.get(i - 1);
-            LatLng currPoint = polygonPoints.get(i);
-            double distance = calculateDistance(prevPoint, currPoint);
-            totalDistance += distance;
-        }
-
-        return totalDistance;
-    }
-
-    private double calculateDistance(LatLng point1, LatLng point2) {
-        return Math.sqrt(Math.pow((point2.latitude - point1.latitude), 2) +
-                Math.pow((point2.longitude - point1.longitude), 2));
-    }
-
-    private LatLng interpolateLatLng(LatLng point1, LatLng point2, double fraction) {
-        double lat = point1.latitude + (point2.latitude - point1.latitude) * fraction;
-        double lng = point1.longitude + (point2.longitude - point1.longitude) * fraction;
-        return new LatLng(lat, lng);
-    }
-    //-------------------------------------------------------
 
     @SuppressLint("PotentialBehaviorOverride")//Not using clustering, GeoJson, or KML
     private void initMapListener(){
@@ -281,6 +233,15 @@ public class MapFragment extends Fragment {
             return false;
         });
         
+    }
+
+    private void initMapObserver(){
+        missionViewModel.getDroneLatLng().observe(this, point2D -> {
+            if(!droneMarker.isVisible()){
+                droneMarker.setVisible(true);
+            }
+            droneMarker.setPosition(new LatLng(point2D.getLatitude(), point2D.getLongitude()));
+        });
     }
     //--------------------------------------------------------
     private void switchButtons(){
@@ -423,4 +384,12 @@ public class MapFragment extends Fragment {
                 .position(new LatLng(0.0,0.0));
     }
 
+    private MarkerOptions getInstanceDroneMarkerOption(){
+        return new MarkerOptions()
+                .icon(bitmapDescriptorFromVector(dji.midware.R.drawable.btn_draw_start_plane))
+                .anchor(0.5f,0.5f)
+                .draggable(false)
+                .visible(false)
+                .position(new LatLng(0.0,0.0));
+    }
 }
