@@ -109,13 +109,36 @@
 
     </TableLayout>
 
-    <ImageButton
-        android:id="@+id/img_btn_start"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/start_mission"
-        android:minHeight="48dp"
-        android:src="@drawable/ic_round_play_circle_24" />
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/img_btn_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_mission"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_round_stop_circle_24" />
+
+        <ImageButton
+            android:id="@+id/img_btn_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_mission"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_round_pause_circle_24" />
+
+        <ImageButton
+            android:id="@+id/img_btn_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_mission"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_round_play_circle_24" />
+    </LinearLayout>
 
     <TextureView
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.dji.drone.viewModel;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
+import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointAction;
 import dji.common.mission.waypoint.WaypointActionType;
@@ -29,7 +31,13 @@ import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
 import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionState;
+import dji.sdk.camera.Camera;
 import dji.sdk.flightcontroller.FlightController;
+import dji.sdk.media.FetchMediaTask;
+import dji.sdk.media.FetchMediaTaskContent;
+import dji.sdk.media.FetchMediaTaskScheduler;
+import dji.sdk.media.MediaFile;
+import dji.sdk.media.MediaManager;
 import dji.sdk.mission.MissionControl;
 import dji.sdk.mission.waypoint.WaypointMissionOperator;
 import dji.sdk.products.Aircraft;
@@ -44,9 +52,10 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
     //-------------------------------
     private WaypointMission.Builder missionBuilder;
     private FlightController flightController;
+    private float INTERVAL_TAKE_PHOTO = 5f;
     //-------------------------------------------
     private MutableLiveData<Point2D> droneLatLng;
-
+    private MutableLiveData<String> missionState;
 
     public MissionViewModel(@NonNull Application application) {
         super(application);
@@ -59,6 +68,7 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
             flightController = aircraft.getFlightController();
             flightController.setStateCallback(this);
         }
+        missionState = new MutableLiveData<>("NONE");
     }
 
     public LiveData<Point2D> getDroneLatLng() {
@@ -75,7 +85,7 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
     public MissionEntity getActualMission() {
         return actualMission;
     }
-    //My Methods--------------------------------------------------
+    //--------------------------------------------------
 
     public List<LatLng> getPath2D(@NonNull List<LatLng> entrada, int start, int size){
         return convertToLatLng(WaypointPathMaker.makeSubCoordinates(convertToPoint2D(entrada), start, size));
@@ -145,6 +155,7 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
         }
         return null;
     }
+
     //DJI------------------------------
     public void tryStartMission() {
         WaypointMissionOperator waypointMissionOperator = getWaypointMissionOperator();
@@ -156,6 +167,8 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
             prepareMission();
         }
 
+        missionState.setValue(waypointMissionOperator.getCurrentState().getName());
+
         WaypointMission djiMission = missionBuilder.build();
         DJIError result = djiMission.checkParameters();
 
@@ -163,6 +176,7 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
             result = waypointMissionOperator.loadMission(djiMission);
             if (result == null) {
                 Log.d(TAG, "LoadWaypoint succeeded");
+                missionState.setValue(waypointMissionOperator.getCurrentState().getName());
                 uploadMission();
             } else {
                 Log.d(TAG, "LoadWaypoint failed: " + result.getDescription() + " " + result.getErrorCode());
@@ -173,14 +187,45 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
         }
     }
 
+    public void pauseMission(){
+        WaypointMissionOperator waypointMissionOperator = getWaypointMissionOperator();
+
+        if(waypointMissionOperator == null){
+            return;
+        }
+
+        if(waypointMissionOperator.getCurrentState() == WaypointMissionState.EXECUTING){
+            waypointMissionOperator.pauseMission(djiError -> {
+                String msg = (djiError == null) ? "successfully" : "Failed(" + djiError.getDescription() + djiError.getErrorCode() + ")";
+                Log.d(TAG, "Mission paused: " + msg);
+            });
+        }
+    }
+
+    public void stopMission(){
+        WaypointMissionOperator waypointMissionOperator = getWaypointMissionOperator();
+
+        if(waypointMissionOperator == null){
+            return;
+        }
+
+        waypointMissionOperator.pauseMission(djiError -> {
+            String msg = (djiError == null) ? "successfully" : "Failed(" + djiError.getDescription() + djiError.getErrorCode() + ")";
+            Log.d(TAG, "Mission stopped: " + msg);
+        });
+
+    }
     private void uploadMission(){
         WaypointMissionState actualState = Objects.requireNonNull(getWaypointMissionOperator()).getCurrentState();
+        missionState.setValue(actualState.getName());
 
-        if(actualState.equals(WaypointMissionState.READY_TO_UPLOAD) || actualState.equals(WaypointMissionState.READY_TO_RETRY_UPLOAD)){
+        if(actualState.equals(WaypointMissionState.READY_TO_UPLOAD) ||
+                actualState.equals(WaypointMissionState.READY_TO_RETRY_UPLOAD)){
             getWaypointMissionOperator().uploadMission(djiError -> {
                 if(djiError == null){
-                    startMission();
                     Log.d(TAG, "Success Upload");
+                    missionState.setValue(getWaypointMissionOperator().getCurrentState().getName());
+                    startMission();
                 }else{
                     Log.d(TAG, "Failed Upload: " + djiError.getDescription() + " " + djiError.getErrorCode());
                 }
@@ -189,10 +234,15 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
     }
 
     private void startMission(){
-        if ((Objects.requireNonNull(getWaypointMissionOperator()).getCurrentState().equals(WaypointMissionState.READY_TO_EXECUTE))){
+        if ((Objects
+                .requireNonNull(getWaypointMissionOperator())
+                .getCurrentState()
+                .equals(WaypointMissionState.READY_TO_EXECUTE))){
+            missionState.setValue(getWaypointMissionOperator().getCurrentState().getName());
             getWaypointMissionOperator().startMission(djiError -> {
                 if(djiError == null){
                     Log.d(TAG, "Start Success");
+                    missionState.setValue(getWaypointMissionOperator().getCurrentState().getName());
                 }else{
                     Log.d(TAG, "Start Failed: " + djiError.getDescription() + " " + djiError.getErrorCode());
                 }
@@ -215,14 +265,14 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
 
                 for (Waypoint item : waypointList) {
                     item.addAction(new WaypointAction(WaypointActionType.START_TAKE_PHOTO, 0));
-                    item.shootPhotoDistanceInterval = 1f;
+                    item.shootPhotoTimeInterval = INTERVAL_TAKE_PHOTO;
                     missionBuilder.addWaypoint(item);
                 }
 
                 missionBuilder.waypointCount(waypointList.size());
                 missionBuilder.autoFlightSpeed(actualMission.getAuto_flight_speed());
                 missionBuilder.maxFlightSpeed(actualMission.getMax_flight_speed());
-                missionBuilder.setExitMissionOnRCSignalLostEnabled(false);
+                missionBuilder.setExitMissionOnRCSignalLostEnabled(true);
                 WaypointMissionGotoWaypointMode gotoWaypointMode = WaypointMissionGotoWaypointMode.find(actualMission.getGoto_mode());
                 missionBuilder.gotoFirstWaypointMode(gotoWaypointMode);
                 WaypointMissionFinishedAction finishedAction = WaypointMissionFinishedAction.find(actualMission.getFinished_action());
@@ -256,15 +306,20 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
     }
 
     public int getNumberOfPhotos() {
-        return 0;
+        return (int) (INTERVAL_TAKE_PHOTO/getTotalTime());
     }
 
-    public String getActualState() {
+    public LiveData<String> getActualState() {
+        //WaypointMissionOperator operator = getWaypointMissionOperator();
+        //if(operator != null){
+        //    return operator.getCurrentState().getName();
+        //}
+        //return "NONE";
         WaypointMissionOperator operator = getWaypointMissionOperator();
         if(operator != null){
-            return operator.getCurrentState().getName();
+            missionState.setValue(operator.getCurrentState().getName());
         }
-        return "NONE";
+        return missionState;
 
     }
 
@@ -292,5 +347,112 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
         point2D.setLatitude(flightControllerState.getAircraftLocation().getLatitude());
         point2D.setLongitude(flightControllerState.getAircraftLocation().getLongitude());
         droneLatLng.setValue(point2D);
+
+        /*
+        WaypointMissionOperator waypointMissionOperator = getWaypointMissionOperator();
+        if(waypointMissionOperator != null){
+            Waypoint waypoint = waypointMissionOperator.getLoadedMission().getWaypointList().get(0);
+            LocationCoordinate3D firtWaypointLocation = new LocationCoordinate3D(
+                    waypoint.coordinate.getLatitude(),
+                    waypoint.coordinate.getLongitude(),
+                    waypoint.altitude);
+            firtWaypointLocation.setLatitude(waypoint.coordinate.getLatitude());
+            double distance = calculateDistance(flightControllerState.getAircraftLocation(), firtWaypointLocation);
+            double DISTANCE_THRESHOLD = 0.1;
+            if(distance <= DISTANCE_THRESHOLD){
+                Camera camera = DJISDKManager.getInstance().getProduct().getCamera();
+
+                if(camera != null){
+                    camera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, errorCameraMode -> {
+                        if(errorCameraMode == null){
+                            camera.setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.INTERVAL, errorShootPhotoMode -> {
+                                if(errorShootPhotoMode == null){
+                                    int qtdPhotos = 10, timeSecond = getTotalTime().intValue();
+                                    camera.setPhotoTimeIntervalSettings(
+                                            new SettingsDefinitions.PhotoTimeIntervalSettings(qtdPhotos, timeSecond), errorPhotoInterval ->{
+                                                if(errorPhotoInterval == null){
+                                                    camera.startShootPhoto(errorStartShoot -> {
+
+                                                    });
+                                                }
+                                            });
+                                }
+                            });
+                        }
+                    });
+
+
+                }
+            }
+        }
+        */
+    }
+
+    private double calculateDistance(LocationCoordinate3D coordinate1, LocationCoordinate3D coordinate2) {
+        final int EARTH_RADIUS_METERS = 6371000;
+
+        double lat1 = Math.toRadians(coordinate1.getLatitude());
+        double lon1 = Math.toRadians(coordinate1.getLongitude());
+        double alt1 = coordinate1.getAltitude();
+        double lat2 = Math.toRadians(coordinate2.getLatitude());
+        double lon2 = Math.toRadians(coordinate2.getLongitude());
+        double alt2 = coordinate2.getAltitude();
+
+        double dLat = lat2 - lat1;
+        double dLon = lon2 - lon1;
+        double dAlt = alt2 - alt1;
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distanceHorizontal = EARTH_RADIUS_METERS * c;
+
+        double distance3D = Math.sqrt(distanceHorizontal * distanceHorizontal + dAlt * dAlt);
+
+        return distance3D;
+    }
+
+    public List<Bitmap> getCrackImages() {
+        List<Bitmap> result = new ArrayList<>();
+        Camera camera = DJISDKManager.getInstance().getProduct().getCamera();
+        MediaManager mediaManager = camera.getMediaManager();
+
+        if(mediaManager != null){
+            List<MediaFile> mediaFiles = mediaManager.getSDCardFileListSnapshot();
+
+            if(mediaFiles != null){
+                List<MediaFile> imageFiles = new ArrayList<>();
+                for (MediaFile mediaFile : mediaFiles) {
+                    if (mediaFile.getMediaType() == MediaFile.MediaType.JPEG) {
+                        imageFiles.add(mediaFile);
+                    }
+                }
+
+                int numberOfImagesToDownload = Math.min(imageFiles.size(), getNumberOfPhotos());
+                FetchMediaTaskScheduler scheduler = mediaManager.getScheduler();
+                for (int i = 0; i < numberOfImagesToDownload; i++) {
+                    MediaFile mediaFile = mediaFiles.get(i);
+                    FetchMediaTask task =
+                            new FetchMediaTask(mediaFile, FetchMediaTaskContent.PREVIEW, new FetchMediaTask.Callback() {
+                                @Override
+                                public void onUpdate(final MediaFile mediaFile, FetchMediaTaskContent fetchMediaTaskContent, DJIError error) {
+                                    if (null == error) {
+                                        if (mediaFile.getPreview() != null) {
+                                            result.add(mediaFile.getPreview());
+                                        } else {
+                                            Log.d(TAG,"null bitmap!");
+                                        }
+                                    } else {
+                                        Log.d(TAG,"fetch preview image failed: " + error.getDescription());
+                                    }
+                                }
+                            });
+                }
+            }
+        }
+
+        return result;
     }
 }

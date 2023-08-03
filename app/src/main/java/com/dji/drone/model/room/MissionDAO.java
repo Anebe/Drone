@@ -28,4 +28,5 @@ public interface MissionDAO {
 
     @Query("SELECT * from points2d where points2d.mission_id = :mission_id")
     List<Point2D> getAllPoint2d(int mission_id);
+
 }

@@ -21,6 +21,7 @@
         tools:layout="@android:layout/simple_gallery_item" />
 
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
@@ -28,17 +29,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchMarkerControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:minHeight="48dp"
-            android:showText="false"
-            android:thumb="@drawable/ic_round_add_circle_24"
-            android:thumbTint="#EBEBEB"
-            tools:checked="true" />
 
         <ImageButton
             android:id="@+id/imageButtonCreate"
@@ -58,26 +48,89 @@
 
     </LinearLayout>
 
-    <SeekBar
-        android:id="@+id/seekBarTeste"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scrollbarSize="100dp"
-        android:visibility="gone"
+        android:gravity="start"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchMarkerControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:minHeight="48dp"
+            android:showText="false"
+            android:thumb="@drawable/ic_round_add_circle_24"
+            android:thumbTint="#EBEBEB"
+            tools:checked="true" />
+
+        <ImageButton
+            android:id="@+id/img_bnt_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_round_check_circle_24" />
+
+        <ImageButton
+            android:id="@+id/img_bnt_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_round_cancel_24" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Position of:" />
+
+        <Button
+            android:id="@+id/btn_drone_pos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Drone" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_create_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="linearLayout2,linearLayout4,textView3"
+        tools:layout_editor_absoluteX="128dp"
+        tools:layout_editor_absoluteY="277dp" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grp_manage_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="linearLayout5"
+        tools:layout_editor_absoluteX="239dp"
+        tools:layout_editor_absoluteY="194dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="Underline to the area "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="gone" />
-
-    <SeekBar
-        android:id="@+id/seekBarTeste2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbarSize="100dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/seekBarTeste"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

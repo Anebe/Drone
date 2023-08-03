@@ -1,12 +1,20 @@
 package com.dji.drone.view;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -16,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dji.drone.R;
 import com.dji.drone.databinding.FragmentMenuBinding;
 import com.dji.drone.databinding.RecyclerViewMissionItensBinding;
+import com.dji.drone.model.ImageSenderThread;
 import com.dji.drone.model.room.MissionEntity;
 import com.dji.drone.viewModel.HomeViewModel;
 
@@ -52,12 +61,36 @@ public class MenuFragment extends Fragment {
     }
 
     private void initListener() {
-
         binding.buttonNew.setOnClickListener(v -> {
             int id = (int) homeViewModel.insertMission("Mission " + menuMissionAdapter.getItemCount());
             MenuFragmentDirections.MenuToMission action = MenuFragmentDirections.menuToMission();
             action.setMissionId(id);
             Navigation.findNavController(view).navigate(action);
+        });
+
+        binding.button2.setOnClickListener(v ->{
+
+            int vectorResId = R.drawable.ic_round_add_circle_24;
+            Drawable vectorDrawable = ContextCompat.getDrawable(requireContext(), vectorResId);
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+            Bitmap imageBitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(imageBitmap);
+            vectorDrawable.draw(canvas);
+            //return BitmapDescriptorFactory.fromBitmap(bitmap);
+
+            String host = "192.168.0.154";
+            int port = 55912;
+
+            if(imageBitmap != null){
+                //ImageSenderThread imageSenderThread = new ImageSenderThread(host, port, imageBitmap);
+                //imageSenderThread.start();
+
+                //new ImageSenderThread(host, port);
+            }
+            else{
+                Log.d(TAG, "Not Image");
+            }
+
         });
     }
 

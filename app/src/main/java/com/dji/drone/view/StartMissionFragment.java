@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.dji.drone.databinding.FragmentStartMissionBinding;
@@ -17,7 +18,7 @@ public class StartMissionFragment extends Fragment {
 
     private FragmentStartMissionBinding binding;
     private MissionViewModel missionViewModel;
-
+    private LiveData<String> missionState;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,18 +53,30 @@ public class StartMissionFragment extends Fragment {
         }
         binding.tvTotalDistanceValue.setText(aux);
 
-        aux = missionViewModel.getActualState();
-        binding.tvStateValue.setText(aux);
+        missionState = missionViewModel.getActualState();
+        //aux = missionViewModel.getActualState();
+        //binding.tvStateValue.setText(aux);
         aux = String.valueOf(missionViewModel.getNumberOfWaypoints());
         binding.tvNumberWaypointsValue.setText(aux);
         aux = String.valueOf(missionViewModel.getNumberOfPhotos());
         binding.tvNumberPhotosValue.setText(aux);
         aux = missionViewModel.getParameterStatus();
+
+
         binding.tvParameterStatusValue.setText(aux);
 
     }
 
     private void initListener(){
         binding.imgBtnStart.setOnClickListener(v -> missionViewModel.tryStartMission());
+        binding.imgBtnPause.setOnClickListener(v -> missionViewModel.pauseMission());
+        binding.imgBtnStop.setOnClickListener(v -> missionViewModel.stopMission());
+    }
+
+    private void initObserver(){
+
+        missionState.observe(this, strState -> {
+            binding.tvStateValue.setText(strState);
+        });
     }
 }

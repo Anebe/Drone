@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.dji.drone.R;
 import com.dji.drone.databinding.FragmentMapBinding;
+import com.dji.drone.model.room.Point2D;
 import com.dji.drone.viewModel.MissionViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -32,6 +32,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,8 @@ public class MapFragment extends Fragment {
     private List<Marker> addMarkers;
     private List<Marker> removeMarkers;
     private List<Marker> moveMarkers;
+    private Polyline lineBuild;
+    private Polyline linePath;
     private Marker droneMarker;
     private MissionViewModel missionViewModel;
 
@@ -122,18 +126,32 @@ public class MapFragment extends Fragment {
 
                 createUpdateMarker(3);
                 switchButtons();
+
+                //if(polygon != null){
+                //    map.clear();
+                //    PolylineOptions polylineOptions = getInstancePolylineOptions();
+                //    int lastIndex = polygon.getPoints().size()-1;
+                //    polylineOptions.add(polygon.getPoints().subList(0, lastIndex).toArray(new LatLng[0]));
+                //    lineBuild = map.addPolyline(polylineOptions);
+                //    polygon = null;
+                //    createUpdateMarker(lineBuild.getPoints().size());
+                //}
+                //binding.grpCreatePath.setVisibility(View.VISIBLE);
+                //binding.grpManagePath.setVisibility(View.GONE);
             }
         });
+
         binding.imageButtonDelete.setOnClickListener(v -> {
             if(map != null){
                 map.clear();
                 addMarkers.clear();
                 removeMarkers.clear();
                 moveMarkers.clear();
+                polygon = null;
+                lineBuild = null;
                 switchButtons();
             }
         });
-        
 
         binding.switchMarkerControl.setOnClickListener(v -> {
             updateMarkerVisible();
@@ -141,6 +159,38 @@ public class MapFragment extends Fragment {
                 binding.switchMarkerControl.setThumbResource(R.drawable.ic_round_add_circle_24);
             }else{
                 binding.switchMarkerControl.setThumbResource(R.drawable.ic_round_remove_circle_24);
+            }
+
+        });
+
+        binding.imgBntConfirm.setOnClickListener(v ->{
+            binding.grpCreatePath.setVisibility(View.GONE);
+            binding.grpManagePath.setVisibility(View.VISIBLE);
+
+            if(lineBuild != null){
+                map.clear();
+                PolygonOptions polygonOptions = getInstancePolygonOptions();
+                polygonOptions.add(lineBuild.getPoints().toArray(new LatLng[0]));
+                polygon = map.addPolygon(polygonOptions);
+                lineBuild = null;
+            }
+        });
+
+        binding.btnDronePos.setOnClickListener(v -> {
+            Point2D point2D = missionViewModel.getDroneLatLng().getValue();
+
+            if(point2D != null){
+                LatLng latLng = new LatLng(point2D.getLatitude(), point2D.getLongitude());
+
+                if(lineBuild == null){
+                    lineBuild = map.addPolyline(getInstancePolylineOptions().add(latLng));
+                }
+                else{
+                    List<LatLng> latLngList = lineBuild.getPoints();
+                    latLngList.add(latLng);
+                    lineBuild.setPoints(latLngList);
+                }
+                createUpdateMarker(1);
             }
 
         });
@@ -232,7 +282,24 @@ public class MapFragment extends Fragment {
             }
             return false;
         });
-        
+
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                if(binding.grpCreatePath.getVisibility() == View.VISIBLE){
+                    if(lineBuild == null){
+                        lineBuild = map.addPolyline(getInstancePolylineOptions().add(latLng));
+                    }
+                    else{
+                        List<LatLng> latLngList = lineBuild.getPoints();
+                        latLngList.add(latLng);
+                        lineBuild.setPoints(latLngList);
+                    }
+                    createUpdateMarker(1);
+                }
+            }
+        });
+
     }
 
     private void initMapObserver(){
@@ -294,6 +361,7 @@ public class MapFragment extends Fragment {
 
     private void updateMarkersPosition(){
         List<LatLng> points = polygon.getPoints();
+        //List<LatLng> points = lineBuild.getPoints();
 
         for (int i = 0; i < addMarkers.size(); i++) {
 
@@ -303,6 +371,7 @@ public class MapFragment extends Fragment {
             double actualLongitude = points.get(i).longitude;
 
             if(i == polygon.getPoints().size()-1){
+            //if(i == lineBuild.getPoints().size()-1){
                 avgLatitude = (actualLatitude + points.get(0).latitude)/2.0;
                 avgLongitude = (actualLongitude + points.get(0).longitude)/2.0;
             }
@@ -356,10 +425,11 @@ public class MapFragment extends Fragment {
         }
     }
     //----------------------------------------------------------------
+
     private PolygonOptions getInstancePolygonOptions(){
         return new PolygonOptions()
-                .strokeColor(Color.BLUE)
-                .strokeWidth(3f);
+                .strokeColor(ContextCompat.getColor(requireContext(), R.color.light_blue_400))
+                .strokeWidth(7f);
     }
 
     private MarkerOptions getInstanceAddMarkerOptions(){
@@ -391,5 +461,11 @@ public class MapFragment extends Fragment {
                 .draggable(false)
                 .visible(false)
                 .position(new LatLng(0.0,0.0));
+    }
+
+    private PolylineOptions getInstancePolylineOptions(){
+        return new PolylineOptions()
+                .color(ContextCompat.getColor(requireContext(), R.color.teal_200))
+                .width(9f);
     }
 }

@@ -1,7 +1,6 @@
 package com.dji.drone.model.room;
 
 import android.content.Context;
-import android.graphics.Point;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,11 +11,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = { MissionEntity.class,
+@Database(entities = {
+        MissionEntity.class,
         WaypointEntity.class,
         WaypointActionEntity.class,
         Point2D.class},
-        version = 8)
+        version = 9)
 public abstract class MissionDatabase extends RoomDatabase {
 
     private static MissionDatabase instance;
