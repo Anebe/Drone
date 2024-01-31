@@ -155,7 +155,10 @@ class RoutMapFragment : Fragment() {
             moveMO.visible(isMoveMarkerVisible)
             removeMO.visible(!isMoveMarkerVisible)
 
-            map.addMarker(addMO)?.let { addMarkers.add(it) }
+            map.addMarker(addMO)?.let {
+                it.tag = addMarkers.size
+                addMarkers.add(it)
+            }
             map.addMarker(removeMO)?.let { removeMarkers.add(it) }
             map.addMarker(moveMO)?.let { moveMarkers.add(it) }
         }

@@ -45,7 +45,7 @@ class ManagerMapFunctionalityFragment : Fragment() {
         }
 
 
-        binding.imageButtonDelete.setOnClickListener { v ->
+        binding.imageButtonDelete.setOnClickListener {
             map.clear()
             switchButtons()
         }
