@@ -21,11 +21,11 @@
         tools:layout="@android:layout/simple_gallery_item" />
 
     <LinearLayout
-        android:id="@+id/linearLayout5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -49,11 +49,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -86,51 +86,30 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Position of:" />
-
-        <Button
-            android:id="@+id/btn_drone_pos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Drone" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/grp_create_path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:visibility="gone"
-        app:constraint_referenced_ids="linearLayout2,linearLayout4,textView3"
-        tools:layout_editor_absoluteX="128dp"
-        tools:layout_editor_absoluteY="277dp" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/grp_manage_path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="linearLayout5"
-        tools:layout_editor_absoluteX="239dp"
-        tools:layout_editor_absoluteY="194dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="Underline to the area "
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/img_btn_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/add_basic_points"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_add_location_24" />
+
+        <ImageButton
+            android:id="@+id/img_btn_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/delete_points"
+            android:minHeight="48dp"
+            android:src="@drawable/ic_baseline_delete_24" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

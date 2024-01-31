@@ -44,14 +44,14 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/startMissionFragment"
-        android:name="com.dji.drone.view.StartMissionFragment"
+        android:name="com.dji.drone.view.MissionStartFragment"
         android:label="fragment_start_mission"
-        tools:layout="@layout/fragment_start_mission" />
+        tools:layout="@layout/fragment_mission_start" />
     <fragment
         android:id="@+id/resultMissionFragment"
-        android:name="com.dji.drone.view.ResultMissionFragment"
+        android:name="com.dji.drone.view.MissionResultFragment"
         android:label="fragment_result_mission"
-        tools:layout="@layout/fragment_result_mission" />
+        tools:layout="@layout/fragment_mission_result" />
     <action
         android:id="@+id/goto_start"
         app:destination="@id/startMissionFragment"

@@ -215,6 +215,7 @@ public class MissionViewModel extends AndroidViewModel implements FlightControll
         });
 
     }
+
     private void uploadMission(){
         WaypointMissionState actualState = Objects.requireNonNull(getWaypointMissionOperator()).getCurrentState();
         missionState.setValue(actualState.getName());

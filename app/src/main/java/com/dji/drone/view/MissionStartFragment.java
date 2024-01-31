@@ -10,19 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.dji.drone.databinding.FragmentStartMissionBinding;
+import com.dji.drone.databinding.FragmentMissionStartBinding;
 import com.dji.drone.viewModel.MissionViewModel;
 
-public class StartMissionFragment extends Fragment {
+public class MissionStartFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
-    private FragmentStartMissionBinding binding;
+    private FragmentMissionStartBinding binding;
     private MissionViewModel missionViewModel;
     private LiveData<String> missionState;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentStartMissionBinding.inflate(inflater, container, false);
+        binding = FragmentMissionStartBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         initData();

@@ -13,7 +13,6 @@ public class BoxResult extends View {
     private Paint paintStroke = new Paint();
     private boolean showBox = false;
     private int[][] boxResult;
-    private int height, width;
 
     public BoxResult(Context context) {
         super(context);
@@ -29,14 +28,17 @@ public class BoxResult extends View {
         super(context, attrs, defStyle);
         init();
     }
+
     private void init() {
+        boxResult = new int[][]{{1,0,1},{1,1,1},{0,1,0}};
         paintBox.setColor(Color.RED);
         paintBox.setStyle(Paint.Style.FILL);
         paintBox.setAlpha(10*255/100);
 
         paintStroke.setColor(Color.BLUE);
         paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setAlpha(10*255/100);
+        paintStroke.setAlpha(30*255/100);
+        paintStroke.setStrokeWidth(5);
 
     }
     public void setBox(int[][] boxResult){
@@ -51,8 +53,9 @@ public class BoxResult extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int heightBox = height / boxResult.length;
-        int widthBox = width / boxResult.length;
+
+        int heightBox = getHeight() / boxResult.length;
+        int widthBox = getWidth() / boxResult.length;
 
         for (int i = 0; i < boxResult.length; i++) {
             for (int j = 0; j < boxResult.length; j++) {
@@ -68,13 +71,11 @@ public class BoxResult extends View {
         }
     }
 
-    public void setHeightWidth(int w, int h){
-        height = h;
-        width = w;
-
+    public void setWH(int w, int h){
         ViewGroup.LayoutParams params = getLayoutParams();
-        params.width = width;
-        params.height = height;
+        params.width = w;
+        params.height = h;
         setLayoutParams(params);
+        invalidate();
     }
 }

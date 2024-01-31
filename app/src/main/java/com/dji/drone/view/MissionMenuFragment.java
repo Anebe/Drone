@@ -12,21 +12,19 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.dji.drone.R;
-import com.dji.drone.databinding.FragmentMissionBinding;
-import com.dji.drone.databinding.FragmentMissionConfigBinding;
+import com.dji.drone.databinding.FragmentMissionMenuBinding;
 import com.dji.drone.viewModel.MissionViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MissionFragment extends Fragment {
+public class MissionMenuFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
 
-    private FragmentMissionBinding binding;
+    private FragmentMissionMenuBinding binding;
     private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentMissionBinding.inflate(inflater, container, false);
+        binding = FragmentMissionMenuBinding.inflate(inflater, container, false);
         view = binding.getRoot();
 
         initUI();
@@ -39,7 +37,7 @@ public class MissionFragment extends Fragment {
         NavHostFragment navHostFragment = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.navigationView);
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-        int id = MissionFragmentArgs.fromBundle(getArguments()).getMissionId();
+        int id = MissionMenuFragmentArgs.fromBundle(getArguments()).getMissionId();
         missionViewModel.setActualMission(id);
     }
 }

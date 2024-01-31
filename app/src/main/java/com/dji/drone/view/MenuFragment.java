@@ -1,30 +1,19 @@
 package com.dji.drone.view;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dji.drone.R;
 import com.dji.drone.databinding.FragmentMenuBinding;
-import com.dji.drone.databinding.RecyclerViewMissionItensBinding;
-import com.dji.drone.model.ImageSenderThread;
+import com.dji.drone.databinding.ItemMissionBinding;
 import com.dji.drone.model.room.MissionEntity;
 import com.dji.drone.viewModel.HomeViewModel;
 
@@ -68,30 +57,6 @@ public class MenuFragment extends Fragment {
             Navigation.findNavController(view).navigate(action);
         });
 
-        binding.button2.setOnClickListener(v ->{
-
-            int vectorResId = R.drawable.ic_round_add_circle_24;
-            Drawable vectorDrawable = ContextCompat.getDrawable(requireContext(), vectorResId);
-            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-            Bitmap imageBitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(imageBitmap);
-            vectorDrawable.draw(canvas);
-            //return BitmapDescriptorFactory.fromBitmap(bitmap);
-
-            String host = "192.168.0.154";
-            int port = 55912;
-
-            if(imageBitmap != null){
-                //ImageSenderThread imageSenderThread = new ImageSenderThread(host, port, imageBitmap);
-                //imageSenderThread.start();
-
-                //new ImageSenderThread(host, port);
-            }
-            else{
-                Log.d(TAG, "Not Image");
-            }
-
-        });
     }
 
     private final IRecyclerViewClickItemListener clickItemListener = new IRecyclerViewClickItemListener() {
@@ -106,7 +71,7 @@ public class MenuFragment extends Fragment {
     public static class MenuMissionAdapter extends RecyclerView.Adapter<MenuMissionAdapter.ViewHolder> {
         private List<MissionEntity> missionList  = new ArrayList<>();
         private final IRecyclerViewClickItemListener onItemClickListener;
-        private RecyclerViewMissionItensBinding binding;
+        private ItemMissionBinding binding;
 
         public MenuMissionAdapter(List<MissionEntity> missionList, IRecyclerViewClickItemListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
@@ -118,7 +83,7 @@ public class MenuFragment extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            binding = RecyclerViewMissionItensBinding.inflate(
+            binding = ItemMissionBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false
             );
             return new ViewHolder(binding);
@@ -140,9 +105,9 @@ public class MenuFragment extends Fragment {
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder{
-            private final RecyclerViewMissionItensBinding binding;
+            private final ItemMissionBinding binding;
 
-            public ViewHolder(@NonNull RecyclerViewMissionItensBinding itemView) {
+            public ViewHolder(@NonNull ItemMissionBinding itemView) {
                 super(itemView.getRoot());
                 this.binding = itemView;
             }

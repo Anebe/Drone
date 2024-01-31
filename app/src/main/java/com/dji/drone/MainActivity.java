@@ -3,7 +3,6 @@ package com.dji.drone;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -25,8 +24,9 @@ import dji.sdk.sdkmanager.DJISDKManager;
 public class MainActivity extends AppCompatActivity{
     private final String TAG = getClass().getName();
 
-    private final List<String> missingPermission = new ArrayList<>();
+    //private final List<String> missingPermission = new ArrayList<>();
     private static final int REQUEST_PERMISSION_CODE = 12345;
+    /*
     private static final String[] REQUIRED_PERMISSION_LIST = new String[]{
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
@@ -42,17 +42,26 @@ public class MainActivity extends AppCompatActivity{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.CAMERA};
-
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkAndRequestPermissions();
+        //checkAndRequestPermissions();
+
+        PermissionManager.Companion.checkAndRequestPermissions(this, REQUEST_PERMISSION_CODE);
+        List<String> missingPermission = PermissionManager.Companion.checkPermissions(this);
+        if(missingPermission.isEmpty()){
+            startSDKRegistration();
+        }
+
+
     }
 
     //PERMISSION-------------------------------------------------
+    /*
     public void checkAndRequestPermissions() {
         for (String eachPermission : REQUIRED_PERMISSION_LIST) {
             if (ContextCompat.checkSelfPermission(this, eachPermission) != PackageManager.PERMISSION_GRANTED) {
@@ -67,6 +76,9 @@ public class MainActivity extends AppCompatActivity{
             startSDKRegistration();
         }
     }
+    */
+
+    /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -89,6 +101,7 @@ public class MainActivity extends AppCompatActivity{
         }
         Log.d(TAG, msg);
     }
+    */
     //DRONE------------------------------------------------------
     private void startSDKRegistration() {
         DJISDKManager.getInstance().registerApp(MainActivity.this, new DJISDKManager.SDKManagerCallback() {
@@ -132,8 +145,4 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-    //CALLBACK DJI-SDK-MANAGER-----------------------------------
-
-
-
 }
