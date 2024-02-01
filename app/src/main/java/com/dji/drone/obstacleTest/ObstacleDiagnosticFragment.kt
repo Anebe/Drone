@@ -10,26 +10,25 @@ import com.dji.drone.databinding.FragmentObstacleDiagnosticBinding
 import dji.keysdk.FlightControllerKey
 import dji.keysdk.KeyManager
 import dji.keysdk.callback.KeyListener
+import dji.sdk.products.Aircraft
 import dji.sdk.sdkmanager.DJISDKManager
 
 
 class ObstacleDiagnosticFragment : Fragment() {
 
-    private val viewModel by viewModels<DistanceDiagnosticViewModel>()
     private lateinit var binding : FragmentObstacleDiagnosticBinding
 
-    private var altitudeKey: FlightControllerKey = FlightControllerKey.create(FlightControllerKey.ALTITUDE)
+    private var altitudeKey: FlightControllerKey = FlightControllerKey.
+    createFlightAssistantKey(FlightControllerKey.DETECTION_SECTORS)
     private val altitudeList: KeyListener = KeyListener { o, o1 ->
-        if (o1 is Float) {
-            val a = (o.toString() + " " + o1.toString() + " " + 45f.toString())
-            binding.tvDistance.text = a
-        }
+        val a = (o.toString() + "\n" + o1.toString() + "\n" + 45f.toString())
+        binding.tvDistance.text = a
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentObstacleDiagnosticBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,21 +41,22 @@ class ObstacleDiagnosticFragment : Fragment() {
 
     private fun initObservers(){
         binding.button.setOnClickListener {
-
             val key = KeyManager.getInstance()
             if (key == null){
                 binding.tvDistance.text = "NULO"
+                return@setOnClickListener
             }
             key.addListener(altitudeKey, altitudeList)
-
-
         }
-        viewModel.distance.observe(viewLifecycleOwner) {
-            var strResult = ""
-            for(distance in it){
-                strResult += "$distance\n"
+
+        binding.button2.setOnClickListener {
+            (DJISDKManager.getInstance().product as Aircraft)
+                .flightController
+                .flightAssistant?.
+                setVisionDetectionStateUpdatedCallback {
+                    val detect = it.detectionSectors
+                    binding.tvDistance2.text = detect.toString()
             }
-            binding.tvDistance.text = strResult
         }
     }
 
