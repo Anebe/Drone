@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.dji.drone.databinding.FragmentObstacleDiagnosticBinding
+import dji.common.flightcontroller.ObstacleDetectionSector
 import dji.keysdk.FlightControllerKey
 import dji.keysdk.KeyManager
 import dji.keysdk.callback.KeyListener
@@ -21,8 +22,18 @@ class ObstacleDiagnosticFragment : Fragment() {
     private var altitudeKey: FlightControllerKey = FlightControllerKey.
     createFlightAssistantKey(FlightControllerKey.DETECTION_SECTORS)
     private val altitudeList: KeyListener = KeyListener { o, o1 ->
-        val a = (o.toString() + "\n" + o1.toString() + "\n" + 45f.toString())
-        binding.tvDistance.text = a
+
+        if(o1 is Array<*>){
+            if(o1.isArrayOf<ObstacleDetectionSector>()){
+                var texto = ""
+                for (section in o1.indices){
+                    texto += (o1[section] as ObstacleDetectionSector).obstacleDistanceInMeters.toString() + "\n"
+                }
+                binding.tvDistance.text = texto
+            }
+
+        }
+
     }
 
     override fun onCreateView(
@@ -50,13 +61,22 @@ class ObstacleDiagnosticFragment : Fragment() {
         }
 
         binding.button2.setOnClickListener {
-            (DJISDKManager.getInstance().product as Aircraft)
-                .flightController
-                .flightAssistant?.
-                setVisionDetectionStateUpdatedCallback {
-                    val detect = it.detectionSectors
-                    binding.tvDistance2.text = detect.toString()
+            val drone = DJISDKManager.getInstance().product
+            if(drone != null && drone is Aircraft){
+                drone.flightController
+                        .flightAssistant?.
+                        setVisionDetectionStateUpdatedCallback { vision ->
+                            val detect = vision.detectionSectors
+                            var texto = ""
+                            if (detect != null) {
+                                for (section in detect.indices){
+                                    texto += (detect[section] as ObstacleDetectionSector).obstacleDistanceInMeters.toString() + "\n"
+                                }
+                            }
+                            binding.tvDistance2.text = detect.toString()
+                        }
             }
+
         }
     }
 

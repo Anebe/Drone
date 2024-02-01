@@ -10,7 +10,8 @@ import dji.sdk.mission.timeline.triggers.Trigger
 class ObstacleDistanceTrigger: Trigger() {
 
     var distanceTrigger: Float = 0.0f
-    private val obstacleKey: FlightControllerKey = FlightControllerKey.create(FlightControllerKey.DETECTION_SECTORS)
+
+    private val obstacleKey: FlightControllerKey = FlightControllerKey.createFlightAssistantKey(FlightControllerKey.DETECTION_SECTORS)
     private val obstacleListener: KeyListener = KeyListener{ old: Any?, new: Any? ->
         if(new is Array<*>){
             for(area in new){

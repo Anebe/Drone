@@ -1,6 +1,7 @@
 package com.dji.drone.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dji.drone.R
 import com.dji.drone.databinding.FragmentManagerMapFunctionalityBinding
-
-
+import dji.sdk.mission.timeline.actions.TakeOffAction
+import dji.sdk.sdkmanager.DJISDKManager
 
 
 class ManagerMapFunctionalityFragment : Fragment() {
+
 
     private val viewModel by viewModels<MissionViewModel>()
     private lateinit var binding: FragmentManagerMapFunctionalityBinding
