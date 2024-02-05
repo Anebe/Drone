@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.dji.drone.R
 import com.dji.drone.databinding.FragmentMissionControlBinding
 import com.dji.mapkit.core.models.DJILatLng
@@ -42,6 +43,15 @@ class MissionControlFragment : Fragment() {
     }
 
     private fun startMission() {
+        /*
+        val error = missionManager.scheduleElement(TakeOffAction())
+        error?.let {
+            Toast.makeText(requireContext(), error.description, Toast.LENGTH_LONG).show()
+        }
+        missionManager.startTimeline()
+        */
+
+        Toast.makeText(requireContext(), coordinates.size.toString(), Toast.LENGTH_LONG).show()
         if(coordinates.isNotEmpty()){
             val elements = mutableListOf<TimelineElement>()
 
@@ -49,6 +59,8 @@ class MissionControlFragment : Fragment() {
             val altitude = 5f
 
             elements.add(TakeOffAction())
+            //coordinates.removeLast()
+            Toast.makeText(requireContext(), coordinates.size.toString(), Toast.LENGTH_LONG).show()
             for(coord in coordinates){
 
                 val goto = GoToAction(LocationCoordinate2D(coord.latitude,coord.longitude), altitude)
@@ -67,9 +79,14 @@ class MissionControlFragment : Fragment() {
             }
 
             val error = missionManager.scheduleElements(elements)
+            error?.let {
+                Toast.makeText(requireContext(), error.description, Toast.LENGTH_LONG).show()
+            }
             if(error == null){
+                Toast.makeText(requireContext(), missionManager.scheduledCount().toString(), Toast.LENGTH_LONG).show()
                 missionManager.startTimeline()
             }
         }
+
     }
 }

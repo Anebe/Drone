@@ -8,11 +8,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.dji.drone.R
-import com.dji.drone.databinding.FragmentTestMapDJIBinding
+import com.dji.drone.databinding.FragmentRouteMapBinding
 import com.dji.mapkit.core.maps.DJIMap
 import com.dji.mapkit.core.maps.koy
 import com.dji.mapkit.core.models.DJIBitmapDescriptor
@@ -22,10 +23,15 @@ import com.dji.mapkit.core.models.annotations.DJIMarker
 import com.dji.mapkit.core.models.annotations.DJIMarkerOptions
 import com.dji.mapkit.core.models.annotations.DJIPolygon
 import com.dji.mapkit.core.models.annotations.DJIPolygonOptions
+import dji.common.model.LocationCoordinate2D
+import dji.sdk.mission.MissionControl
+import dji.sdk.mission.timeline.TimelineElement
+import dji.sdk.mission.timeline.actions.GoToAction
+import dji.sdk.mission.timeline.actions.TakeOffAction
 
 class RouteMapFragment : Fragment() {
 
-    private lateinit var binding: FragmentTestMapDJIBinding
+    private lateinit var binding: FragmentRouteMapBinding
     private var map: DJIMap? = null
     private var polygon: DJIPolygon? = null
     private var markers = mutableListOf<DJIMarker>()
@@ -36,7 +42,7 @@ class RouteMapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTestMapDJIBinding.inflate(inflater, container, false)
+        binding = FragmentRouteMapBinding.inflate(inflater, container, false)
         binding.map.initGoogleMap {
             map = it
             initData()
@@ -87,6 +93,55 @@ class RouteMapFragment : Fragment() {
 
         binding.switchMarkerControl.setOnClickListener {
             viewModel.moveRoute.value = binding.switchMarkerControl.isChecked
+        }
+
+
+        val missionManager = MissionControl.getInstance()
+        binding.start.setOnClickListener{
+
+            polygon?.points?.let {
+                val elements = mutableListOf<TimelineElement>()
+                val coordinates = it
+                val velocity = 10f
+                val altitude = 5f
+
+                Toast.makeText(requireContext(), coordinates.size.toString(), Toast.LENGTH_LONG).show()
+                elements.add(TakeOffAction())
+                //coordinates.removeLast()
+                Toast.makeText(requireContext(), coordinates.size.toString(), Toast.LENGTH_LONG).show()
+                for(coord in coordinates){
+
+                    val goto = GoToAction(LocationCoordinate2D(coord.latitude,coord.longitude), altitude)
+                    goto.flightSpeed = velocity
+
+
+                    val trigger = ObstacleDistanceTrigger()
+                    trigger.distanceTrigger = 1f
+                    trigger.setAction {
+                        missionManager.stopTimeline()
+                    }
+                    goto.triggers = listOf(trigger)
+
+
+                    elements.add(goto)
+                }
+
+                val error = missionManager.scheduleElements(elements)
+                error?.let {
+                    Toast.makeText(requireContext(), error.description, Toast.LENGTH_LONG).show()
+                }
+                if(error == null){
+                    Toast.makeText(requireContext(), missionManager.scheduledCount().toString(), Toast.LENGTH_LONG).show()
+                    missionManager.startTimeline()
+                }
+            }
+        }
+
+        binding.stop.setOnClickListener{
+            if(missionManager.isTimelineRunning){
+                missionManager.stopTimeline()
+                missionManager.unscheduleEverything()
+            }
         }
 
         map?.let{
