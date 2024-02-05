@@ -21,7 +21,7 @@ class ObstacleDiagnosticFragment : Fragment() {
 
     private var altitudeKey: FlightControllerKey = FlightControllerKey.
     createFlightAssistantKey(FlightControllerKey.DETECTION_SECTORS)
-    private val altitudeList: KeyListener = KeyListener { o, o1 ->
+    private val altitudeList: KeyListener = KeyListener { _, o1 ->
 
         if(o1 is Array<*>){
             if(o1.isArrayOf<ObstacleDetectionSector>()){
@@ -78,8 +78,5 @@ class ObstacleDiagnosticFragment : Fragment() {
             }
 
         }
-    }
-
-    companion object {
     }
 }

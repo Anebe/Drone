@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/managerMapFunctionality">
+    app:startDestination="@id/testMapDJIFragment">
 
     <fragment
         android:id="@+id/missionFragment"
@@ -24,14 +24,14 @@
             app:destination="@id/missionFragment" />
     </fragment>
     <fragment
-        android:id="@+id/managerMapFunctionality"
-        android:name="com.dji.drone.map.ManagerMapFunctionalityFragment"
-        android:label="fragment_manager_map_functionality"
-        tools:layout="@layout/fragment_manager_map_functionality" />
-    <fragment
         android:id="@+id/obstacleDiagnostic"
         android:name="com.dji.drone.obstacleTest.ObstacleDiagnosticFragment"
         android:label="fragment_obstacle_diagnostic"
         tools:layout="@layout/fragment_obstacle_diagnostic" />
+    <fragment
+        android:id="@+id/testMapDJIFragment"
+        android:name="com.dji.drone.map.RouteMapFragment"
+        android:label="fragment_test_map_d_j_i"
+        tools:layout="@layout/fragment_route_map" />
 
 </navigation>
